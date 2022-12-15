@@ -1,0 +1,11 @@
+MAP_LAYOUT = [['sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand'],
+              ['sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand'],
+              ['sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand'],
+              ['sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand'],
+              ['sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand'],
+              ['sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand'],
+              ['sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand'],
+              ['sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand'],
+              ['sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand'],
+              ['sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand'],
+              ['sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand','sand']]

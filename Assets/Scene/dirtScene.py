@@ -1,4 +1,4 @@
-from Scene import Scene
+from scene import Scene
 
 MAP_LAYOUT = [['dirt','dirt','dirt','dirt','dirt','dirt','dirt','dirt','dirt','dirt','dirt','dirt','dirt','dirt','dirt','dirt','dirt','dirt','dirt','dirt'],
               ['dirt','dirt','dirt','dirt','dirt','dirt','dirt','dirt','dirt','dirt','dirt','dirt','dirt','dirt','dirt','dirt','dirt','dirt','dirt','dirt'],

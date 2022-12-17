@@ -1,4 +1,4 @@
-from Assets.Tile import TILE_SIZE
+from Assets.tile import TILE_SIZE
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 704
 

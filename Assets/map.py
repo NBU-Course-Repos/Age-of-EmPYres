@@ -30,7 +30,8 @@ class Map:
                 rand_y = randint(45, 60)
                 y = row * rand_y;
                 x = col * rand_x;
-                sprite_list.append(Tile((x, y), tile_type=f"Tree/summer_tree_{col}"))
+                tree = randint(1, 9)
+                sprite_list.append(Tile((x, y), tile_type=f"Tree/summer_tree_{tree}"))
                 for sprite in sorted(sprite_list, key=lambda sprite: sprite.rect.centery):
                     sprite.add(group)
                     

@@ -1,5 +1,6 @@
 import pygame
-from Assets.settings import SCREEN_WIDTH,SCREEN_HEIGHT
+from Assets.settings import SCREEN_WIDTH, SCREEN_HEIGHT
+
 
 class CameraGroup(pygame.sprite.Group):
     def __init__(self):
@@ -8,34 +9,31 @@ class CameraGroup(pygame.sprite.Group):
         self.offset = pygame.math.Vector2()
         self.offsetX = self.offsetY = 0
 
-    @staticmethod
+    # TO DO: Set Offset Limit based on map size
     def __update_offset(self):
         # By How much should the screen move
-        offset_pixels = 10
+        offset_pixels = 15
         mouse_pos = pygame.mouse.get_pos()
-        mouseX = mouse_pos[0]
-        mouseY = mouse_pos[1]
+        mouse_x = mouse_pos[0]
+        mouse_y = mouse_pos[1]
 
         # Left side of screen
-        if mouseX <= 3:
+        if mouse_x <= 3:
             self.offsetX += offset_pixels
         # Right side of screen
-        elif mouseX >= SCREEN_WIDTH - 3:
+        elif mouse_x >= SCREEN_WIDTH - 3:
             self.offsetX -= offset_pixels
         # Top of the screen
-        if mouseY <= 3:
+        if mouse_y <= 3:
             self.offsetY += offset_pixels
         # Bottom of the screen
-        elif mouseY >= SCREEN_HEIGHT - 3:
+        elif mouse_y >= SCREEN_HEIGHT - 3:
             self.offsetY -= offset_pixels
 
         self.offset.update(self.offsetX, self.offsetY)
 
-    def print(self):
-        print(len(self.sprites()))
-
     def custom_draw(self):
-        self.__update_offset(self)
+        self.__update_offset()
         for sprite in self.sprites():
             offset_pos = sprite.rect.topleft + self.offset
             self.displaySurface.blit(sprite.image, offset_pos)

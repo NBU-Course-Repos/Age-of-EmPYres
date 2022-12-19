@@ -25,6 +25,7 @@ class Map:
         sprite_list = []
         for row in range(0, 20):
             for col in range(1, 9):
+                # Random Tile Spacing in range
                 rand_x = randint(45, 55)
                 rand_y = randint(45, 60)
                 y = row * rand_y;

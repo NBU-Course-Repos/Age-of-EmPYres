@@ -6,7 +6,7 @@ from Assets.settings import MAP_SETTINGS
 class Tile(pygame.sprite.Sprite):
     TILE_VARIATIONS = ['sand', 'dirt']
 
-    def __init__(self, pos, group, tile_type):
+    def __init__(self, pos, group=pygame.sprite.AbstractGroup(), tile_type=""):
         super().__init__(group)
         self.TILE_SIZE = Vector2((MAP_SETTINGS["Tiles"]["Size"]["x"],
                                   MAP_SETTINGS["Tiles"]["Size"]["y"]))

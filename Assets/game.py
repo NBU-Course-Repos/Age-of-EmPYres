@@ -4,6 +4,7 @@ from Assets.settings import SCREEN_WIDTH, SCREEN_HEIGHT
 from Assets.map import Map
 from Assets.Tiles.groups import *
 from Assets.Units.villager import Villager
+from Assets.controls import Controls
 
 # Generate the Map before the pygame windows is started
 pygame.init()
@@ -18,27 +19,11 @@ world = Map(camera)
 clock = pygame.time.Clock()
 camera.custom_draw()
 villager = Villager(camera)
-
 unit_group = pygame.sprite.Group()
 villager.add(unit_group)
 
 while True:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            sys.exit()
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:  # Turn on/off game pause
-            ui_group.set_pause()
-        if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0]:
-            mouse_pos = pygame.mouse.get_pos()
-            print("Mouse_pos")
-            print(mouse_pos)
-            for unit in unit_group.sprites(): # Need to perform raycast somehow
-                unit.select_unit()
-                print("Unit Pos: ")
-                print(unit.rect.center)
-                if unit.rect.center == mouse_pos:
-                    unit.select_unit()
-
+    Controls.event_handler(unit_group=unit_group, ui_group=ui_group)
     if not ui_group.isPaused:
         screen.fill((0, 204, 0))
         camera.update()

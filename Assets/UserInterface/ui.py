@@ -11,7 +11,6 @@ class UI(pygame.sprite.Sprite):
         self.border_dimensions = dimensions
         self.pos = pos
         self.image = pygame.image.load(f"Assets//Textures//{image}.png")
-        self.image = pygame.transform.scale(self.image, self.border_dimensions).convert_alpha()
+        self.image = pygame.transform.scale(self.image, self.border_dimensions)
         self.rect = self.image.get_rect(topleft=self.pos)
-
 

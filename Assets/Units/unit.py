@@ -1,5 +1,5 @@
 import pygame
-from pygame.math import Vector2 as Vector2
+from pygame.math import Vector2
 from Assets.UserInterface.ui import UI
 
 
@@ -26,9 +26,10 @@ class Unit(pygame.sprite.Sprite):
         self.image = pygame.image.load(f"Assets/Textures/Units/{image}.png")
         self.image = pygame.transform.scale(self.image, self.size)
 
-    def move(self, pos):
+    def move(self, pos: Vector2):
         if self.rect.center != pos:
             # TO DO: Need to calculate the correct move offset from below to reach pos
-            self.rect.move(self.movement_speed, self.movement_speed)
-            self.move(pos)
+            self.rect.center = pos
+            # self.rect.move(self.movement_speed, self.movement_speed)
+            # self.move(pos)
 

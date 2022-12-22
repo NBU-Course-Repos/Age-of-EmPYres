@@ -4,6 +4,7 @@ from pygame.math import Vector2
 import Assets.Units.unit
 sys.setrecursionlimit(1500)
 
+
 class Controls:
     selectedObjects = []
 
@@ -32,6 +33,9 @@ class Controls:
             # Check if right mouse button is clicked
             if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[2]:
                 mouse_pos = Vector2(pygame.mouse.get_pos())
+                print(mouse_pos)
                 for obj in __class__.selectedObjects:
-                        obj.move(mouse_pos)
+                    obj.set_move(mouse_pos)
+                    print("")
+                    print(obj.pos)
 

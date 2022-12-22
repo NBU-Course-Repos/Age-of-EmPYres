@@ -28,6 +28,9 @@ while True:
         screen.fill((0, 204, 0))
         camera.update()
         camera.custom_draw()
+    for unit in unit_group.sprites():
+        unit.custom_update()
+
     ui_group.update()
     ui_group.draw(screen)
     pygame.display.update()

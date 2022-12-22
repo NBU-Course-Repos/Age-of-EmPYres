@@ -15,3 +15,7 @@ class Villager(Unit):
         self.image = pygame.image.load(f"Assets/Textures/Units/{image}.png")
         self.image = pygame.transform.scale(self.image, self.size)
         self.rect = self.image.get_rect(topleft=self.pos)
+
+    def build(self):
+        pass
+        # TO DO

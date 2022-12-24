@@ -1,5 +1,9 @@
 import pygame
+
+import Assets.Units.villager
 from Assets.settings import SCREEN_WIDTH, SCREEN_HEIGHT
+from Assets.Units.unit import Unit
+from Assets.Units.villager import Villager
 
 
 class CameraGroup(pygame.sprite.Group):
@@ -37,3 +41,6 @@ class CameraGroup(pygame.sprite.Group):
         for sprite in self.sprites():
             offset_pos = sprite.rect.topleft + self.offset
             self.displaySurface.blit(sprite.image, offset_pos)
+            if type(sprite) == Villager:
+                sprite.update_rect(offset_pos)
+

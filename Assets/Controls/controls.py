@@ -1,15 +1,17 @@
 import pygame
 import sys
 from pygame.math import Vector2
-import Assets.Units.unit
-sys.setrecursionlimit(1500)
+from Assets.Buildings.house import House
+from Assets.Controls.states import ControlStates
 
 
 class Controls:
     selectedObjects = []
+    _building: House
+    state = ControlStates.NOTHING
 
     @staticmethod
-    def event_handler(unit_group, ui_group):
+    def event_handler(camera, unit_group, ui_group, building_group):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -18,24 +20,31 @@ class Controls:
                 ui_group.set_pause()
             # Check if left mouse button is clicked
             if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0]:
+                if __class__.state == ControlStates.BUILDING:
+                    __class__._building.construct()
+                    __class__.state = ControlStates.NOTHING
                 mouse_pos = Vector2(pygame.mouse.get_pos())
-                print("Mouse_pos")
-                print(mouse_pos)
-                print("Unit pos")
                 selected_count = 0
-                for unit in unit_group.sprites():  # Need to perform ray-cast somehow
-                    print(unit.pos)
+                for unit in unit_group.sprites():
                     if unit.pos.x + unit.rect.w > mouse_pos.x > unit.pos.x - unit.rect.w and \
                        unit.pos.y + unit.rect.h > mouse_pos.y > unit.pos.y - unit.rect.h:
+                        __class__.state = ControlStates.UNIT
                         unit.select_unit()
                         __class__.selectedObjects.append(unit)
                         selected_count += 1
+
             # Check if right mouse button is clicked
             if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[2]:
                 mouse_pos = Vector2(pygame.mouse.get_pos())
-                print(mouse_pos)
-                for obj in __class__.selectedObjects:
-                    obj.set_move(mouse_pos)
-                    print("")
-                    print(obj.pos)
+                if __class__.state == ControlStates.UNIT:
+                    for obj in __class__.selectedObjects:
+                        obj.set_move(mouse_pos)
+
+                elif __class__.state == ControlStates.BUILDING:
+                    __class__._building
+
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_b:
+                __class__.state = ControlStates.BUILDING
+                __class__._building = House(camera)
+                __class__._building.add(building_group)
 

@@ -6,7 +6,7 @@ from Assets.Units.states import UnitState
 
 class Unit(pygame.sprite.Sprite):
 
-    def __init__(self, group, pos=Vector2(0, 0), image="", hp=100, size=Vector2(0, 0), speed=5):
+    def __init__(self, group, pos=Vector2(0, 0), image="", hp=100, size=Vector2(0, 0), speed=10):
         super().__init__(group)
         self.health_points = hp
         self.size = size
@@ -66,6 +66,8 @@ class Unit(pygame.sprite.Sprite):
                 self.pos.y = self.rect.y
         else:
             self.unit_state = UnitState.STATE_IDLE
+
+    # def _construct(self):
 
     def custom_update(self):
         if self.unit_state == UnitState.STATE_IDLE:

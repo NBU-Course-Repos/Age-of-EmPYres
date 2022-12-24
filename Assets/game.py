@@ -1,10 +1,9 @@
-import sys
 import pygame
 from Assets.settings import SCREEN_WIDTH, SCREEN_HEIGHT
 from Assets.map import Map
 from Assets.Tiles.groups import *
 from Assets.Units.villager import Villager
-from Assets.controls import Controls
+from Assets.Controls.controls import Controls
 
 # Generate the Map before the pygame windows is started
 pygame.init()
@@ -20,17 +19,20 @@ clock = pygame.time.Clock()
 camera.custom_draw()
 villager = Villager(camera)
 unit_group = pygame.sprite.Group()
+buildings_group = pygame.sprite.Group()
 villager.add(unit_group)
 
+
 while True:
-    Controls.event_handler(unit_group=unit_group, ui_group=ui_group)
+    Controls.event_handler(camera = camera, unit_group=unit_group, ui_group=ui_group, building_group=buildings_group)
     if not ui_group.isPaused:
         screen.fill((0, 204, 0))
         camera.update()
         camera.custom_draw()
-    for unit in unit_group.sprites():
-        unit.custom_update()
-
+        for unit in unit_group.sprites():
+            unit.custom_update()
+        for building in buildings_group:
+            building.custom_update()
     ui_group.update()
     ui_group.draw(screen)
     pygame.display.update()

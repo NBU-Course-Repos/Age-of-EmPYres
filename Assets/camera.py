@@ -33,14 +33,13 @@ class CameraGroup(pygame.sprite.Group):
         # Bottom of the screen
         elif mouse_y >= SCREEN_HEIGHT - 3:
             self.offsetY -= offset_pixels
-
         self.offset.update(self.offsetX, self.offsetY)
 
     def custom_draw(self):
+        # To Do: Don't update unit sprite if in state moving
         self.__update_offset()
         for sprite in self.sprites():
             offset_pos = sprite.rect.topleft + self.offset
             self.displaySurface.blit(sprite.image, offset_pos)
             if type(sprite) == Villager:
                 sprite.update_rect(offset_pos)
-

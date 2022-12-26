@@ -22,9 +22,10 @@ unit_group = pygame.sprite.Group()
 buildings_group = pygame.sprite.Group()
 villager.add(unit_group)
 
-
+start_ticks = pygame.time.get_ticks()
 while True:
-    Controls.event_handler(camera = camera, unit_group=unit_group, ui_group=ui_group, building_group=buildings_group)
+    new_ticks = pygame.time.get_ticks()
+    Controls.event_handler(camera=camera, unit_group=unit_group, ui_group=ui_group, building_group=buildings_group)
     if not ui_group.isPaused:
         screen.fill((0, 204, 0))
         camera.update()
@@ -33,7 +34,6 @@ while True:
             unit.custom_update()
         for building in buildings_group:
             building.custom_update()
-    ui_group.update()
-    ui_group.draw(screen)
+    ui_group.custom_update()
     pygame.display.update()
     clock.tick(60)

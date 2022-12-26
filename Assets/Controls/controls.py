@@ -1,13 +1,22 @@
 import pygame
 import sys
 from pygame.math import Vector2
+
+from Assets.Units.villager import Villager
 from Assets.Buildings.house import House
 from Assets.Controls.states import ControlStates
 
 
+def is_clicked(obj, mouse_pos):
+    if obj.pos.x + obj.rect.w > mouse_pos.x > obj.pos.x - obj.rect.w and \
+       obj.pos.y + obj.rect.h > mouse_pos.y > obj.pos.y - obj.rect.h:
+        return True
+    return False
+
+
 class Controls:
     selectedObjects = []
-    _building: House
+    building: House
     state = ControlStates.NOTHING
 
     @staticmethod
@@ -20,37 +29,56 @@ class Controls:
                 ui_group.set_pause()
             # Check if left mouse button is clicked
             if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0]:
-                if __class__.state == ControlStates.BUILDING:
-                    __class__._building.construct()
-                    __class__.state = ControlStates.NOTHING
+                if Controls.state == ControlStates.BUILDING:
+                    Controls.building.construct()
+                    Controls.state = ControlStates.UNIT
+                    for unit in Controls.selectedObjects:
+                        if type(unit) == Villager:
+                            unit.set_construct(Controls.building)
+
                 mouse_pos = Vector2(pygame.mouse.get_pos())
                 selected_count = 0
+
+                # Selected Units
                 for unit in unit_group.sprites():
-                    if unit.pos.x + unit.rect.w > mouse_pos.x > unit.pos.x - unit.rect.w and \
-                       unit.pos.y + unit.rect.h > mouse_pos.y > unit.pos.y - unit.rect.h:
-                        __class__.state = ControlStates.UNIT
+                    if is_clicked(unit, mouse_pos):
+                        Controls.state = ControlStates.UNIT
                         unit.select(ui_group)
-                        __class__.selectedObjects.append(unit)
+                        Controls.selectedObjects.append(unit)
                         selected_count += 1
-                if selected_count == 0 and len(__class__.selectedObjects):
+
+                # If any of the ui is clicked, don't deselect the selected objects
+                for ui in ui_group.sprites():
+                    if is_clicked(ui, mouse_pos):
+                        selected_count += 1
+
+                # If button has been clicked, perform its action
+                for button in ui_group.buttons:
+                    if is_clicked(button, mouse_pos):
+                        selected_count += 1
+                        button.action(camera, building_group)
+                        break
+
+                if selected_count == 0 and len(Controls.selectedObjects):
                     # if there aren't any selected object in the last left mouse click deselect
                     # the ones that were previously selected
-                    for obj in __class__.selectedObjects:
+                    for obj in Controls.selectedObjects:
                         obj.deselect(ui_group=ui_group)
-                    __class__.selectedObjects.clear()
+                    Controls.selectedObjects.clear()
 
             # Check if right mouse button is clicked
             if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[2]:
                 mouse_pos = Vector2(pygame.mouse.get_pos())
-                if __class__.state == ControlStates.UNIT:
-                    for obj in __class__.selectedObjects:
+                if Controls.state == ControlStates.UNIT:
+                    for obj in Controls.selectedObjects:
                         obj.set_move(mouse_pos)
 
-                elif __class__.state == ControlStates.BUILDING:
-                    __class__._building
+                elif Controls.state == ControlStates.BUILDING:
+                    Controls.building.kill() # Stop placing the building
 
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_b:
-                __class__.state = ControlStates.BUILDING
-                __class__._building = House(camera)
-                __class__._building.add(building_group)
+            # House building shortcut
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_q:
+                Controls.state = ControlStates.BUILDING
+                Controls.building = House(camera)
+                Controls.building.add(building_group)
 

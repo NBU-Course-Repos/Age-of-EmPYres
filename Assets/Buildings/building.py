@@ -49,7 +49,6 @@ class Building(pygame.sprite.Sprite):
         self._set_image(self.texture, alpha=255)
 
     def custom_update(self):
-        print(self.building_state)
         if self.building_state == BuildingState.PLACING:
             self.placing()
         elif self.building_state == BuildingState.BUILT:

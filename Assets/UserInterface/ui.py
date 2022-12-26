@@ -1,6 +1,6 @@
 import pygame
 from Assets.settings import SCREEN_HEIGHT, SCREEN_WIDTH
-from pygame.math import Vector2 as Vector2
+from pygame.math import Vector2
 
 DEFAULT_DIMENSIONS = Vector2(SCREEN_WIDTH - SCREEN_WIDTH / 3, SCREEN_HEIGHT / 5)
 

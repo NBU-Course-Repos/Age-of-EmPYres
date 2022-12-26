@@ -29,9 +29,15 @@ class Controls:
                     if unit.pos.x + unit.rect.w > mouse_pos.x > unit.pos.x - unit.rect.w and \
                        unit.pos.y + unit.rect.h > mouse_pos.y > unit.pos.y - unit.rect.h:
                         __class__.state = ControlStates.UNIT
-                        unit.select_unit()
+                        unit.select(ui_group)
                         __class__.selectedObjects.append(unit)
                         selected_count += 1
+                if selected_count == 0 and len(__class__.selectedObjects):
+                    # if there aren't any selected object in the last left mouse click deselect
+                    # the ones that were previously selected
+                    for obj in __class__.selectedObjects:
+                        obj.deselect(ui_group=ui_group)
+                    __class__.selectedObjects.clear()
 
             # Check if right mouse button is clicked
             if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[2]:

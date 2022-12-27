@@ -11,16 +11,17 @@ class Building(pygame.sprite.Sprite):
 
     def __init__(self, group, texture, hp=1000, ct=20):
         super().__init__(group)
-        self.texture = texture
-        self.building_state = BuildingState.PLACING
-        self._workers = Group()
-        self._completion_time = ct
+        self.texture = texture      # Image to use for the building
+        self.building_state = BuildingState.PLACING   # Initial building state
+        self._workers = Group()     # Sprite.Group to store the worker assigned to the building
+        self._completion_time = ct  # Total time that it should take to construct a building
         # self._required_materials: dict
-        self._tiles_occupied = 1
+        self._tiles_occupied = 1     # Used to determine the number of tiles used in every coordinate
         self._remaining_build_time = self._completion_time  # To be used when the building process is paused
-        self._health_points = hp
-        self._position = Vector2(0, 0)
-        self._size = Vector2(self._tiles_occupied * self.tile_x, self._tiles_occupied * self.tile_y)
+        self._health_points = hp     # HP for the building
+        self._position = Vector2(0, 0)      # Building Position
+        self._start_ticks = 0  # Used as time to denote the construction start
+        self._size = Vector2(self._tiles_occupied * self.tile_x, self._tiles_occupied * self.tile_y)  # Image dimensions
 
     def add_worker(self, worker):
         if self._workers.has(worker):
@@ -39,22 +40,22 @@ class Building(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=self._position)
 
     def construct(self):
-        if self._completion_time == 0:
+        if self._remaining_build_time == 0:  # Complete construction
+            self._set_image(self.texture)
             self.building_state = BuildingState.BUILT
             return
-        if self._workers.sprites():
-            print(self._remaining_build_time)
+        if self._workers.sprites() and self.building_state != BuildingState.BUILT:  # Start Constructing the building
+            if self._start_ticks == 0:
+                self._start_ticks = pygame.time.get_ticks()
             self.building_state = BuildingState.CONSTRUCTING
-            _remaining_build_time = pygame.time.get_ticks()
-            if self._remaining_build_time <= 0:
-                self._set_image(self.texture)
-                self.building_state == BuildingState.BUILT
             workers_cnt = len(self._workers.sprites())
-            self._remaining_build_time = self._completion_time - int(pygame.time.get_ticks()/1000)*workers_cnt
-        else:
+            self._remaining_build_time = self._completion_time - int((pygame.time.get_ticks()-self._start_ticks)/1000)*workers_cnt
+            print("ticks: " + str(pygame.time.get_ticks()/1000))
+            print("remaining time " + str(self._remaining_build_time))
+        else:  # Pause Construction
             self.building_state = BuildingState.PAUSE_CONSTRUCTION
+            self._start_ticks = 0  # If the construction is paused reset the start time
             self._set_image("foundation", 255)
-            # Do something
 
     def get_position(self):
         return Vector2(self._position)

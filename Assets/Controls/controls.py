@@ -74,7 +74,7 @@ class Controls:
                         obj.set_move(mouse_pos)
 
                 elif Controls.state == ControlStates.BUILDING:
-                    Controls.building.kill() # Stop placing the building
+                    Controls.building.kill()  # Stop placing the building
 
             # House building shortcut
             if event.type == pygame.KEYDOWN and event.key == pygame.K_q:

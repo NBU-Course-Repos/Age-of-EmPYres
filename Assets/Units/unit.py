@@ -21,7 +21,6 @@ class Unit(pygame.sprite.Sprite):
         self.state = UnitState.STATE_IDLE
         self.name = name
 
-
     def update_rect(self, pos):
         self.pos = pos
 

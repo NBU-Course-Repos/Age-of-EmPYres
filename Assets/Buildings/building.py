@@ -23,6 +23,9 @@ class Building(pygame.sprite.Sprite):
         self._start_ticks = 0  # Used as time to denote the construction start
         self._size = Vector2(self._tiles_occupied * self.tile_x, self._tiles_occupied * self.tile_y)  # Image dimensions
 
+    def get_workers(self):
+        return self._workers.sprites()
+
     def add_worker(self, worker):
         if self._workers.has(worker):
             return

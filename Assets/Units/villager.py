@@ -11,11 +11,10 @@ class Villager(Unit):
     def __init__(self, group, pos=Vector2(0, 0), image="villager", hp=100, size=Vector2(30, 30)):
         super().__init__(group, pos, image, hp, size)
         self.name = "villager"
-        self.task_object = None
 
     #  If working on a self.task_object, stop
     def stop_working(self):
-        if self.task_object != None and self in self.task_object.get_workers():
+        if self.task_object is not None and self in self.task_object.get_workers():
             self.task_object.remove_worker(self)
 
     def select(self, ui_group, image="villager_selected"):

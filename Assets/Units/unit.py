@@ -20,6 +20,7 @@ class Unit(pygame.sprite.Sprite):
         self.isSelected = False
         self.state = UnitState.STATE_IDLE
         self.name = name
+        self.task_object = None
 
     def update_rect(self, pos):
         self.pos = pos

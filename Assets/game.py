@@ -23,7 +23,7 @@ villager.add(camera.unit_group)
 start_ticks = pygame.time.get_ticks()
 while True:
     new_ticks = pygame.time.get_ticks()
-    Controls.event_handler(camera=camera)
+    Controls.event_handler(camera)
     if not camera.ui_group.isPaused:
         screen.fill((0, 204, 0))
         camera.update()

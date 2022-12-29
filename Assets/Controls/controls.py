@@ -1,10 +1,10 @@
 import pygame
 import sys
 from pygame.math import Vector2
-
 from Assets.Units.villager import Villager
 from Assets.Buildings.house import House
 from Assets.Controls.states import ControlStates
+from Assets.Buildings.states import BuildingState
 
 
 def is_clicked(obj, mouse_pos):
@@ -69,9 +69,21 @@ class Controls:
             # Check if right mouse button is clicked
             if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[2]:
                 mouse_pos = Vector2(pygame.mouse.get_pos())
+                target = None
+                # If a foundation is selected set it as a target
+                for building in camera.buildings_group.sprites():
+                    if is_clicked(building, mouse_pos) and building.state != BuildingState.BUILT:
+                        target = building
+                        building.highlight_foundation()
+                        break
                 if Controls.state == ControlStates.UNIT:
                     for obj in Controls.selectedObjects:
-                        obj.set_move(mouse_pos)
+                        # if the Unit is a villager and there the target is a foundation,
+                        # finish constructing it
+                        if target is not None and type(obj) == Villager:
+                            obj.set_construct(target)
+                        else:
+                            obj.set_move(mouse_pos)
 
                 elif Controls.state == ControlStates.BUILDING:
                     Controls.building.kill()  # Stop placing the building

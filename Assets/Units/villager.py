@@ -48,7 +48,7 @@ class Villager(Unit):
         self.task_object = building
 
     def _construct(self):
-        if self.task_object.building_state != BuildingState.BUILT:
+        if self.task_object.state != BuildingState.BUILT:
             self.targetDestination = self.task_object.get_position()
             if not self._is_at_target():
                 self._move()

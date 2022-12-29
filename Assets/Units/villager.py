@@ -2,7 +2,6 @@ import pygame
 from pygame.math import Vector2
 from Assets.Units.unit import Unit
 from Assets.Units.states import UnitState
-from Assets.Buildings.building import Building
 from Assets.Buildings.states import BuildingState
 
 

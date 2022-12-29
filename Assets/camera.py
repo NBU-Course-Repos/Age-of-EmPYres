@@ -1,9 +1,7 @@
 import pygame
-
-import Assets.Units.villager
 from Assets.settings import SCREEN_WIDTH, SCREEN_HEIGHT
-from Assets.Units.unit import Unit
 from Assets.Units.villager import Villager
+from Assets.UserInterface.ui_group import UIGroup
 
 
 class CameraGroup(pygame.sprite.Group):
@@ -12,6 +10,9 @@ class CameraGroup(pygame.sprite.Group):
         self.displaySurface = pygame.display.get_surface()
         self.offset = pygame.math.Vector2()
         self.offsetX = self.offsetY = 0
+        self.ui_group = UIGroup()
+        self.unit_group = pygame.sprite.Group()
+        self.buildings_group = pygame.sprite.Group()
 
     # TO DO: Set Offset Limit based on map size
     def __update_offset(self):

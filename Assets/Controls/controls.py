@@ -20,13 +20,13 @@ class Controls:
     state = ControlStates.NOTHING
 
     @staticmethod
-    def event_handler(camera, unit_group, ui_group, building_group):
+    def event_handler(camera):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:  # Turn on/off game pause
-                ui_group.set_pause()
+                camera.ui_group.set_pause()
             # Check if left mouse button is clicked
             if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0]:
                 if Controls.state == ControlStates.BUILDING:
@@ -40,30 +40,30 @@ class Controls:
                 selected_count = 0
 
                 # Selected Units
-                for unit in unit_group.sprites():
+                for unit in camera.unit_group.sprites():
                     if is_clicked(unit, mouse_pos):
                         Controls.state = ControlStates.UNIT
-                        unit.select(ui_group)
+                        unit.select(camera.ui_group)
                         Controls.selectedObjects.append(unit)
                         selected_count += 1
 
                 # If any of the ui is clicked, don't deselect the selected objects
-                for ui in ui_group.sprites():
+                for ui in camera.ui_group.sprites():
                     if is_clicked(ui, mouse_pos):
                         selected_count += 1
 
                 # If button has been clicked, perform its action
-                for button in ui_group.buttons:
+                for button in camera.ui_group.buttons:
                     if is_clicked(button, mouse_pos):
                         selected_count += 1
-                        button.action(camera, building_group)
+                        button.action(camera, camera.buildings_group)
                         break
 
                 if selected_count == 0 and len(Controls.selectedObjects):
                     # if there aren't any selected object in the last left mouse click deselect
                     # the ones that were previously selected
                     for obj in Controls.selectedObjects:
-                        obj.deselect(ui_group=ui_group)
+                        obj.deselect(camera.ui_group)
                     Controls.selectedObjects.clear()
 
             # Check if right mouse button is clicked
@@ -80,5 +80,5 @@ class Controls:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_q:
                 Controls.state = ControlStates.BUILDING
                 Controls.building = House(camera)
-                Controls.building.add(building_group)
+                Controls.building.add(camera.buildings_group)
 

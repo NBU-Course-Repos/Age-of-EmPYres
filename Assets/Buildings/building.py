@@ -9,17 +9,17 @@ class Building(pygame.sprite.Sprite):
     tile_x = MAP_SETTINGS["Tiles"]["Size"]["x"]
     tile_y = MAP_SETTINGS["Tiles"]["Size"]["y"]
 
-    def __init__(self, group, texture, hp=1000, ct=20):
+    def __init__(self, group, texture, hp=1000, ct=20, to=2, pos=Vector2(0, 0)):
         super().__init__(group)
         self.texture = texture      # Image to use for the building
         self.state = BuildingState.PLACING   # Initial building state
         self._workers = Group()     # Sprite.Group to store the worker assigned to the building
         self._completion_time = ct  # Total time that it should take to construct a building
         # self._required_materials: dict
-        self._tiles_occupied = 1     # Used to determine the number of tiles used in every coordinate
+        self._tiles_occupied = to     # Used to determine the number of tiles used in every coordinate
         self._remaining_build_time = self._completion_time  # To be used when the building process is paused
         self._health_points = hp     # HP for the building
-        self.pos: Vector2 = Vector2(0, 0)      # Building Position
+        self.pos: Vector2 = pos      # Building Position
         self._start_ticks = 0  # Used as time to denote the construction start
         self._size = Vector2(self._tiles_occupied * self.tile_x, self._tiles_occupied * self.tile_y)  # Image dimensions
 

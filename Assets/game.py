@@ -21,10 +21,17 @@ villager = Villager(camera)
 villager.add(camera.unit_group)
 
 start_ticks = pygame.time.get_ticks()
+font = pygame.font.SysFont(None, 24)
+img = font.render('hello', True, (0, 0, 0))
+
+for sprite in camera.sprites():
+    print (sprite)
+
 while True:
     new_ticks = pygame.time.get_ticks()
     Controls.event_handler(camera)
     if not camera.ui_group.isPaused:
+        screen.blit(img, (20, 20))
         screen.fill((0, 204, 0))
         camera.update()
         camera.custom_draw()

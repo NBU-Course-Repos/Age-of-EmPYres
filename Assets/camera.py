@@ -5,6 +5,7 @@ from Assets.UserInterface.ui_group import UIGroup
 
 
 class CameraGroup(pygame.sprite.Group):
+
     def __init__(self):
         super().__init__(self)
         self.displaySurface = pygame.display.get_surface()
@@ -13,8 +14,9 @@ class CameraGroup(pygame.sprite.Group):
         self.ui_group = UIGroup()
         self.unit_group = pygame.sprite.Group()
         self.buildings_group = pygame.sprite.Group()
+        self.has_mill = False
 
-    # TO DO: Set Offset Limit based on map size
+        # TO DO: Set Offset Limit based on map size
     def __update_offset(self):
         # By How much should the screen move
         offset_pixels = 15
@@ -44,3 +46,4 @@ class CameraGroup(pygame.sprite.Group):
             self.displaySurface.blit(sprite.image, offset_pos)
             if type(sprite) == Villager:
                 sprite.update_rect(offset_pos)
+

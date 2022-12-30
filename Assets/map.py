@@ -2,7 +2,8 @@ from pygame.math import Vector2 as Vector2
 from Assets.settings import MAP_SETTINGS, SCREEN_HEIGHT, SCREEN_WIDTH
 from Assets.tile import Tile
 from random import randint
-
+from Assets.Buildings.building import Building
+from Assets.Buildings.states import BuildingState
 
 class Map:
     def __init__(self, group):
@@ -13,6 +14,9 @@ class Map:
                                     MAP_SETTINGS["Tiles"]["Size"]["y"]))
         self.__generate_terrain(group)
         self.__generate_resources(group)
+        starter_building = Building(group, "starting_building", pos=Vector2(SCREEN_WIDTH/2, SCREEN_HEIGHT/2), ct=0, to=2.5)
+        starter_building.construct()
+        starter_building.state = BuildingState.BUILT
         
     def __generate_terrain(self, group) -> list:
         total_map_size = self.__MAP_SIZE.elementwise()*self.__TILE_SIZE

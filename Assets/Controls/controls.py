@@ -3,6 +3,7 @@ import sys
 from pygame.math import Vector2
 from Assets.Units.villager import Villager
 from Assets.Buildings.house import House
+from Assets.Buildings.building import Building
 from Assets.Controls.states import ControlStates
 from Assets.Buildings.states import BuildingState
 
@@ -16,7 +17,7 @@ def is_clicked(obj, mouse_pos):
 
 class Controls:
     selectedObjects = []
-    building: House
+    building: Building
     state = ControlStates.NOTHING
 
     @staticmethod
@@ -53,7 +54,7 @@ class Controls:
                         selected_count += 1
 
                 # If button has been clicked, perform its action
-                for button in camera.ui_group.buttons:
+                for button in camera.ui_group.rendered_buttons:
                     if is_clicked(button, mouse_pos):
                         selected_count += 1
                         button.action(camera, camera.buildings_group)

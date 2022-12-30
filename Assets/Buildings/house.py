@@ -1,5 +1,4 @@
 from Assets.Buildings.building import Building
-import pygame
 
 
 class House(Building):

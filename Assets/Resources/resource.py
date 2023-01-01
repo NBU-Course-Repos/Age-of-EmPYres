@@ -19,6 +19,10 @@ class Resource(Sprite):
         if self.resource_type == ResourceType.WOOD:
             self.image = self.image = pygame.transform.scale(self.image, (64, 100))
         self.rect = self.image.get_rect(midbottom=tile.rect.center)
+        # pygame.draw.rect(surface=self.image,
+        #                  color=(255, 255, 255),
+        #                  rect=[0, 0, self.rect.x, self.rect.y],
+        #                  width=1)
 
     def select(self):
         self.tile.draw_border()

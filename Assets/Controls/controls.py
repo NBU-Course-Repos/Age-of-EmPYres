@@ -16,10 +16,8 @@ class Controls:
 
     @staticmethod
     def is_clicked(obj, mouse_pos):
-        obj_x = obj.rect.x
-        obj_y = obj.rect.y
-        # if obj.pos.x + obj.rect.w > mouse_pos.x > obj.pos.x - obj.rect.w and \
-        #         obj.pos.y + obj.rect.h > mouse_pos.y > obj.pos.y - obj.rect.h:
+        obj_x = obj.pos.x
+        obj_y = obj.pos.y
         if obj_x < mouse_pos.x < obj_x + obj.rect.w and \
                 obj_y < mouse_pos.y < obj_y + obj.rect.h:
             return True

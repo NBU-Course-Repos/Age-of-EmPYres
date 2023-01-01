@@ -1,26 +1,32 @@
 import pygame
-
-import Assets.Units.villager
+from pygame.math import Vector2
 from Assets.settings import SCREEN_WIDTH, SCREEN_HEIGHT
-from Assets.Units.unit import Unit
 from Assets.Units.villager import Villager
+from Assets.UserInterface.ui_group import UIGroup
 
 
 class CameraGroup(pygame.sprite.Group):
+
     def __init__(self):
         super().__init__(self)
         self.displaySurface = pygame.display.get_surface()
-        self.offset = pygame.math.Vector2()
+        self.offset = pygame.math.Vector2(0, 0)
         self.offsetX = self.offsetY = 0
+        self.ui_group = UIGroup()
+        self.unit_group = pygame.sprite.Group()
+        self.buildings_group = pygame.sprite.Group()
+        self.resources = pygame.sprite.Group()
+        self.has_mill = False
 
-    # TO DO: Set Offset Limit based on map size
+        self.groups = [self.unit_group, self.buildings_group, self.resources]  # To be used in custom draw
+
+        # TO DO: Set Offset Limit based on map size
     def __update_offset(self):
         # By How much should the screen move
         offset_pixels = 15
         mouse_pos = pygame.mouse.get_pos()
         mouse_x = mouse_pos[0]
         mouse_y = mouse_pos[1]
-
         # Left side of screen
         if mouse_x <= 3:
             self.offsetX += offset_pixels
@@ -39,7 +45,8 @@ class CameraGroup(pygame.sprite.Group):
         # To Do: Don't update unit sprite if in state moving
         self.__update_offset()
         for sprite in self.sprites():
-            offset_pos = sprite.rect.topleft + self.offset
+            offset_pos = sprite.pos = sprite.rect.topleft + self.offset
             self.displaySurface.blit(sprite.image, offset_pos)
             if type(sprite) == Villager:
                 sprite.update_rect(offset_pos)
+

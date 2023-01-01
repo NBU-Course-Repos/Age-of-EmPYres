@@ -9,9 +9,7 @@ from Assets.UserInterface.Buttons.buildings_button import BuildingsButton
 class UIGroup(Group):
     isPaused = False
     PAUSE_MENU = UI(pos=Vector2(335, 100), dimensions=Vector2(SCREEN_WIDTH / 2, SCREEN_HEIGHT - 150))
-    villager_buttons_display = False
-    rendered_buttons = []
-    buttons = Group()
+    rendered_buttons = Group()
 
     def __init__(self):
         super().__init__(self)
@@ -30,20 +28,20 @@ class UIGroup(Group):
             self.isPaused = True
 
     def render_villager_buttons(self):
-        if UIGroup.buttons.sprites():
+        if UIGroup.rendered_buttons.sprites():
             UIGroup.clear_buttons()
-        button = BuildingsButton(group=UIGroup.buttons, pos=self.bottom_left_bar.pos+Vector2(20, 20))
-        button.add(self)
+        BuildingsButton(group=self, pos=self.bottom_left_bar.pos + Vector2(20, 20)).add(self.rendered_buttons)
+        BuildingsButton(group=self, pos=self.bottom_left_bar.pos + Vector2(20, 20)).add(self.rendered_buttons)
 
     @staticmethod
     def clear_buttons():
         print("Clearing buttons")
-        for button in UIGroup.buttons.sprites():
+        for button in UIGroup.rendered_buttons.sprites():
             button.kill()
-        UIGroup.buttons.empty
+        UIGroup.rendered_buttons.empty
 
     def custom_update(self):
         self.update()
         self.draw(pygame.display.get_surface())
-        UIGroup.buttons.update()
-        UIGroup.buttons.draw(pygame.display.get_surface())
+        UIGroup.rendered_buttons.update()
+        UIGroup.rendered_buttons.draw(pygame.display.get_surface())

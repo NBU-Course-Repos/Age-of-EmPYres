@@ -16,8 +16,8 @@ class Resource(Sprite):
             self.image = pygame.image.load(f"Assets/Textures/Resources/{self.resource_type.value}_{image_enum}.png")
         except FileNotFoundError:
             self.image = pygame.image.load(f"Assets/Textures/Resources/{self.resource_type}_1.png")
-        if self.resource_type == ResourceType.WOOD:
-            self.image = self.image = pygame.transform.scale(self.image, (64, 100))
+        if self.resource_type == ResourceType.WOOD or self.resource_type == ResourceType.STONE:
+            self.image = self.image = pygame.transform.scale(self.image, (64, 64))
         self.rect = self.image.get_rect(midbottom=tile.rect.center)
         # pygame.draw.rect(surface=self.image,
         #                  color=(255, 255, 255),

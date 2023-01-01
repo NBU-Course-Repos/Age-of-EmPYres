@@ -32,13 +32,17 @@ class Map:
         for row in range(-int(total_map_size.y/2), int(total_map_size.y/2), 64):
             for col in range(-int(total_map_size.x/2), int(total_map_size.x/2), 64):
                 tile = Tile((col, row), group, "grass")
-                if self.tree_count <= 3000 and randint(0, 9) % 4 == 0:
+                if randint(0, 9) % 4 == 0 and self.tree_count <= 3000:
                     i = randint(1, 9)
-                    self.__generate_resources((col, row), group, ResourceType.WOOD, i, tile=tile)
+                    self.__generate_resources((col, row), group, ResourceType.WOOD, i, tile)
+                elif randint(0, 13) % 7 == 0 and self.stone_count <= 300:
+                    self.__generate_resources((col, row), group, ResourceType.STONE, 1, tile)
 
     def __generate_resources(self, pos: Vector2, camera, resource: ResourceType, image_enum: int, tile):
         obj = Resource(pos, camera, resource, image_enum, tile=tile)
         obj.add(camera.resources)
         if resource == ResourceType.WOOD:
             self.tree_count += 1
+        if resource == ResourceType.STONE:
+            self.stone_count += 1
                     

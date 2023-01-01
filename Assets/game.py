@@ -1,7 +1,7 @@
 import pygame
 from Assets.settings import SCREEN_WIDTH, SCREEN_HEIGHT
 from Assets.map import Map
-from Assets.Tiles.groups import *
+from Assets.camera import CameraGroup
 from Assets.Units.villager import Villager
 from Assets.Controls.controls import Controls
 
@@ -11,7 +11,6 @@ screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
 pygame.display.set_caption("Age of Empyres")
 pygame.display.set_icon(pygame.image.load("Assets/Textures/grail.png"))
 camera = CameraGroup()
-ui_group = UIGroup()
 
 world = Map(camera)
 
@@ -23,9 +22,6 @@ villager.add(camera.unit_group)
 start_ticks = pygame.time.get_ticks()
 font = pygame.font.SysFont(None, 24)
 img = font.render('hello', True, (0, 0, 0))
-
-for sprite in camera.sprites():
-    print (sprite)
 
 while True:
     new_ticks = pygame.time.get_ticks()

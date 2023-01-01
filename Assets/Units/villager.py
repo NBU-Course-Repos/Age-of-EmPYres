@@ -25,14 +25,14 @@ class Villager(Unit):
         self.rect = self.image.get_rect(topleft=self.pos)
         ui_group.render_villager_buttons()
 
-    def deselect(self, ui_group):
+    def deselect(self):
         if not self.isSelected:
             return
         self.isSelected = False
         self.image = pygame.image.load(f"Assets/Textures/Units/{self.name}.png")
         self.image = pygame.transform.scale(self.image, self.size)
         self.rect = self.image.get_rect(topleft=self.pos)
-        ui_group.clear_buttons()
+        self.camera.ui_group.clear_buttons()
 
     def set_move(self, pos: Vector2):
         self.targetDestination = pos

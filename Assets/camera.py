@@ -1,8 +1,10 @@
 import pygame
 from pygame.math import Vector2
 from Assets.settings import SCREEN_WIDTH, SCREEN_HEIGHT
-from Assets.Units.villager import Villager
+from Assets.Units.unit import Unit
 from Assets.UserInterface.ui_group import UIGroup
+from Assets.Buildings.town_center import TownCenter
+from Assets.Buildings.states import BuildingState
 
 
 class CameraGroup(pygame.sprite.Group):
@@ -17,7 +19,7 @@ class CameraGroup(pygame.sprite.Group):
         self.buildings_group = pygame.sprite.Group()
         self.resources = pygame.sprite.Group()
         self.has_mill = False
-
+        self.town_center = None
         self.groups = [self.unit_group, self.buildings_group, self.resources]  # To be used in custom draw
 
         # TO DO: Set Offset Limit based on map size
@@ -47,6 +49,6 @@ class CameraGroup(pygame.sprite.Group):
         for sprite in self.sprites():
             offset_pos = sprite.pos = sprite.rect.topleft + self.offset
             self.displaySurface.blit(sprite.image, offset_pos)
-            if type(sprite) == Villager:
+            if issubclass(type(sprite), Unit):
                 sprite.update_rect(offset_pos)
 

@@ -11,13 +11,13 @@ class Unit(pygame.sprite.Sprite):
         self.health_points = hp
         self.size = size
         self.pos = pos
-        self.targetDestination = pos
+        self.target_destination = pos
         self.name = ""
         self.movement_speed = speed
         self.image = pygame.image.load(f"Assets/Textures/Units/{image}.png")
         self.image = pygame.transform.scale(self.image, self.size)
         self.rect = self.image.get_rect(topleft=self.pos)
-        self.isSelected = False
+        self.is_selected = False
         self.state = UnitState.STATE_IDLE
         self.name = name
         self.task_object = None
@@ -28,51 +28,51 @@ class Unit(pygame.sprite.Sprite):
         self.pos = pos
 
     def select(self, image=""):
-        if self.isSelected:
+        if self.is_selected:
             return
-        self.isSelected = True
+        self.is_selected = True
         self.image = pygame.image.load(f"Assets/Textures/Units/{image}.png")
         self.image = pygame.transform.scale(self.image, self.size)
 
     def deselect(self):
-        if not self.isSelected:
+        if not self.is_selected:
             return
-        self.isSelected = False
+        self.is_selected = False
         self.image = pygame.image.load(f"Assets/Textures/Units/{self.name}.png")
         self.image = pygame.transform.scale(self.image, self.size)
 
     def set_move(self, pos: Vector2):
-        self.targetDestination = pos
+        self.target_destination = pos
         if not self._is_at_target():
             self.state = UnitState.MOVING
         else:
             self.state = UnitState.STATE_IDLE
 
     def _is_at_target(self):
-        return self.pos == self.targetDestination
+        return self.pos == self.target_destination
 
     def _move(self):
         if not self._is_at_target():
             move_offset_x = move_offset_y = self.movement_speed
-            if self.targetDestination.x > self.pos.x:
-                if move_offset_x > self.targetDestination.x - self.pos.x:
-                    move_offset_x = self.targetDestination.x - self.pos.x
+            if self.target_destination.x > self.pos.x:
+                if move_offset_x > self.target_destination.x - self.pos.x:
+                    move_offset_x = self.target_destination.x - self.pos.x
                 self.rect.x += move_offset_x
                 self.pos.x = self.rect.x
-            elif self.targetDestination.x < self.pos.x:
-                if move_offset_x > self.pos.x - self.targetDestination.x:
-                    move_offset_x = self.pos.x - self.targetDestination.x
+            elif self.target_destination.x < self.pos.x:
+                if move_offset_x > self.pos.x - self.target_destination.x:
+                    move_offset_x = self.pos.x - self.target_destination.x
                 self.rect.x -= move_offset_x
                 self.pos.x = self.rect.x
 
-            if self.targetDestination.y > self.pos.y:
-                if move_offset_y > self.targetDestination.y - self.pos.y:
-                    move_offset_y = self.targetDestination.y - self.pos.y
+            if self.target_destination.y > self.pos.y:
+                if move_offset_y > self.target_destination.y - self.pos.y:
+                    move_offset_y = self.target_destination.y - self.pos.y
                 self.rect.y += move_offset_y
                 self.pos.y = self.rect.y
-            elif self.targetDestination.y < self.pos.y:
-                if move_offset_y > self.pos.y - self.targetDestination.y:
-                    move_offset_y = self.pos.y - self.targetDestination.y
+            elif self.target_destination.y < self.pos.y:
+                if move_offset_y > self.pos.y - self.target_destination.y:
+                    move_offset_y = self.pos.y - self.target_destination.y
                 self.rect.y -= move_offset_y
                 self.pos.y = self.rect.y
         else:

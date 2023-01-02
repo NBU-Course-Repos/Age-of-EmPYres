@@ -10,7 +10,7 @@ from Assets.Resources.states import ResourceStatus
 class Villager(Unit):
 
     def __init__(self, group, pos=Vector2(0, 0), image="villager", hp=100, size=Vector2(30, 30)):
-        super().__init__(group, pos, image, hp, size, damage=3, speed=5)
+        super().__init__(group, pos, image, hp, size, damage=3, speed=2)
         self.name = "villager"
         self.gather_rate = 1  # What amount of resources can be gather per second.
         # Might re-do it as a dictionary for the different types of resources
@@ -32,7 +32,7 @@ class Villager(Unit):
         }
 
     def _offload_resources(self):
-        self.targetDestination = Vector2(500, 0)
+        self.target_destination = self.camera.town_center.pos
         if not self._is_at_target():
             self._move()
         else:
@@ -47,18 +47,18 @@ class Villager(Unit):
             self.task_object.remove_worker(self)
 
     def select(self, ui_group, image="villager_selected"):
-        if self.isSelected:
+        if self.is_selected:
             return
-        self.isSelected = True
+        self.is_selected = True
         self.image = pygame.image.load(f"Assets/Textures/Units/{image}.png")
         self.image = pygame.transform.scale(self.image, self.size)
         self.rect = self.image.get_rect(topleft=self.pos)
         ui_group.render_villager_buttons()
 
     def deselect(self):
-        if not self.isSelected:
+        if not self.is_selected:
             return
-        self.isSelected = False
+        self.is_selected = False
         self.image = pygame.image.load(f"Assets/Textures/Units/{self.name}.png")
         self.image = pygame.transform.scale(self.image, self.size)
         self.rect = self.image.get_rect(topleft=self.pos)
@@ -69,7 +69,7 @@ class Villager(Unit):
         self.stop_working()
 
     def set_move(self, pos: Vector2):
-        self.targetDestination = pos
+        self.target_destination = pos
         self.stop_working()
         if not self._is_at_target():
             self.state = UnitState.MOVING
@@ -88,7 +88,7 @@ class Villager(Unit):
 
     def _construct(self):
         if self.task_object.state != BuildingState.BUILT:
-            self.targetDestination = self.task_object.get_position()
+            self.target_destination = self.task_object.get_position()
             if not self._is_at_target():
                 self._move()
                 self.task_object.add_worker(self)
@@ -98,7 +98,7 @@ class Villager(Unit):
 
     def _gather(self):
         if self.task_object.state != ResourceStatus.DESTROYED:
-            self.targetDestination = self.task_object.get_position()
+            self.target_destination = self.task_object.get_position()
             if not self._is_at_target():
                 self._move()
                 self.task_object.add_worker(self)

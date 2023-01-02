@@ -7,6 +7,7 @@ from Assets.Buildings.building import Building
 from Assets.Controls.states import ControlStates
 from Assets.Buildings.states import BuildingState
 from Assets.Units.unit import Unit
+from Assets.Resources.resource import Resource
 
 
 class Controls:
@@ -41,7 +42,7 @@ class Controls:
             if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0]:
                 if Controls.state == ControlStates.PLACING:
                     # If in Building placement mode
-                    Controls.building.construct()
+                    Controls.building.construct()  # Here if the building is not built, its state is set to CONSTRUCTING
                     Controls.state = ControlStates.UNIT
                     for unit in Controls.selectedObjects:
                         if type(unit) == Villager:
@@ -93,12 +94,20 @@ class Controls:
                         target = building
                         building.highlight_foundation()
                         break
+                for resource in camera.resources.sprites():
+                    if Controls.is_clicked(resource, mouse_pos):
+                        target = resource
+
                 if Controls.state == ControlStates.UNIT:
                     for obj in Controls.selectedObjects:
                         # if the Unit is a villager and there the target is a foundation,
                         # finish constructing it
-                        if target is not None and type(obj) == Villager:
+                        if issubclass(type(target), Building) and type(obj) == Villager:
                             obj.set_construct(target)
+                        elif issubclass(type(target), Resource) and type(obj) == Villager:
+                            print(target)
+                            obj.set_gather(target)
+                            print(obj.state)
                         elif issubclass(type(obj), Unit):
                             obj.set_move(mouse_pos)
 

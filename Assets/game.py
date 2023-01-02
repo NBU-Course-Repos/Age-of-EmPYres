@@ -35,6 +35,8 @@ while True:
             unit.custom_update()
         for building in camera.buildings_group:
             building.custom_update()
+        for resource in camera.resources:
+            resource.custom_update()
     camera.ui_group.custom_update()
     pygame.display.update()
     clock.tick(60)

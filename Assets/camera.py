@@ -48,7 +48,11 @@ class CameraGroup(pygame.sprite.Group):
         self.__update_offset()
         for sprite in self.sprites():
             offset_pos = sprite.pos = sprite.rect.topleft + self.offset
-            self.displaySurface.blit(sprite.image, offset_pos)
+            sprite_coordinates = Vector2(sprite.pos)
+            if SCREEN_WIDTH > sprite_coordinates.x > -100 and\
+               SCREEN_HEIGHT > sprite_coordinates.y > -100:
+                # Draw only the sprites withing the screen dimensions and a bit to the side
+                self.displaySurface.blit(sprite.image, offset_pos)
             if issubclass(type(sprite), Unit):
                 sprite.update_rect(offset_pos)
 

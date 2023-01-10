@@ -4,7 +4,7 @@ from enum import Enum
 class ResourceType(Enum):
     WOOD = "tree"
     STONE = "stone"
-    BRONZE = "bronze_ore"
-    IRON = "iron_ore"
+    BRONZE = "bronze"
+    IRON = "iron"
     FOOD = "food"
-    GOLD = "gold_ore"
+    GOLD = "gold"

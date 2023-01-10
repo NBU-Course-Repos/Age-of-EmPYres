@@ -15,6 +15,14 @@ class Controls:
     building: Building
     state = ControlStates.NOTHING
 
+    # Used to deselect object of class_type. For ex. we want only one resource selected, only one building, etc.
+    @staticmethod
+    def __deselect_same(class_type):
+        for selected in Controls.selectedObjects:
+            if issubclass(type(selected), class_type):
+                selected.deselect()
+                Controls.selectedObjects.remove(selected)
+
     @staticmethod
     def is_clicked(obj, mouse_pos):
         obj_x = obj.pos.x
@@ -53,17 +61,21 @@ class Controls:
 
                 for resource in camera.resources.sprites():
                     if Controls.is_clicked(resource, mouse_pos):
+                        Controls.__clear_selected()
                         resource.select()
                         selected_count += 1
                         Controls.selectedObjects.append(resource)
+                        break
 
                 # Selected Units
                 for unit in camera.unit_group.sprites():
                     if Controls.is_clicked(unit, mouse_pos):
+                        Controls.__clear_selected()
                         Controls.state = ControlStates.UNIT
-                        unit.select(camera.ui_group)
+                        unit.select()
                         Controls.selectedObjects.append(unit)
                         selected_count += 1
+                        break
 
                 # If any of the ui is clicked, don't deselect the selected objects
                 for ui in camera.ui_group.sprites():
@@ -94,9 +106,12 @@ class Controls:
                         target = building
                         building.highlight_foundation()
                         break
+
                 for resource in camera.resources.sprites():
                     if Controls.is_clicked(resource, mouse_pos):
+                # Controls.__deselect_same(Resource)
                         target = resource
+                        break
 
                 if Controls.state == ControlStates.UNIT:
                     for obj in Controls.selectedObjects:
@@ -105,9 +120,7 @@ class Controls:
                         if issubclass(type(target), Building) and type(obj) == Villager:
                             obj.set_construct(target)
                         elif issubclass(type(target), Resource) and type(obj) == Villager:
-                            print(target)
                             obj.set_gather(target)
-                            print(obj.state)
                         elif issubclass(type(obj), Unit):
                             obj.set_move(mouse_pos)
 

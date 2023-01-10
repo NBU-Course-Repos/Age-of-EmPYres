@@ -2,8 +2,8 @@ import pygame
 from Assets.settings import SCREEN_WIDTH, SCREEN_HEIGHT
 from Assets.map import Map
 from Assets.camera import CameraGroup
-from Assets.Units.villager import Villager
 from Assets.Controls.controls import Controls
+from Assets.Player.player import Player
 
 # Generate the Map before the pygame windows is started
 pygame.init()
@@ -16,18 +16,16 @@ world = Map(camera)
 
 clock = pygame.time.Clock()
 camera.custom_draw()
-villager = Villager(camera)
-villager.add(camera.unit_group)
 
 start_ticks = pygame.time.get_ticks()
-font = pygame.font.SysFont(None, 24)
-img = font.render('hello', True, (0, 0, 0))
+
+player = Player(team=1, camera=camera)
 
 while True:
     new_ticks = pygame.time.get_ticks()
+    player.custom_update()
     Controls.event_handler(camera)
     if not camera.ui_group.isPaused:
-        screen.blit(img, (20, 20))
         screen.fill((0, 204, 0))
         camera.update()
         camera.custom_draw()
@@ -38,5 +36,6 @@ while True:
         for resource in camera.resources:
             resource.custom_update()
     camera.ui_group.custom_update()
+    # screen.blit(text, (0, 0))
     pygame.display.update()
     clock.tick(60)

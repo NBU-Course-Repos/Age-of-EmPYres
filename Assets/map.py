@@ -22,11 +22,11 @@ class Map:
                                     MAP_SETTINGS["Tiles"]["Size"]["y"]))
         self.__generate_terrain(camera)
         # self.__generate_resources(group)
-        camera.town_center = TownCenter([camera,camera.buildings_group])
+        # camera.town_center = TownCenter([camera,camera.buildings_group])
         # starter_building = Building(camera, "starting_building", pos=Vector2(SCREEN_WIDTH/2, SCREEN_HEIGHT/2), ct=0, to=2.5)
-        camera.town_center.set_size(Vector2(250, 150))
-        camera.town_center.construct()
-        camera.town_center.state = BuildingState.BUILT
+        # camera.town_center.set_size(Vector2(250, 150))
+        # camera.town_center.construct()
+        # camera.town_center.state = BuildingState.BUILT
 
     def __generate_terrain(self, group):
         total_map_size = self.__MAP_SIZE.elementwise()*self.__TILE_SIZE

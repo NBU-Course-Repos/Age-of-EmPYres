@@ -4,6 +4,7 @@ from pygame.math import Vector2 as Vector2
 from Assets.UserInterface.ui import UI
 from Assets.settings import SCREEN_WIDTH, SCREEN_HEIGHT
 from Assets.UserInterface.Buttons.buildings_button import BuildingsButton
+from Assets.UserInterface.colors import Colors
 
 
 class UIGroup(Group):
@@ -14,8 +15,10 @@ class UIGroup(Group):
     def __init__(self):
         super().__init__(self)
         self.civilian_building = None
+
         self.bottom_bar = UI(group=self, image="bottom_bar",
                              pos=Vector2(235, 603))
+
         self.bottom_left_bar = UI(group=self, image="dirt",
                                   pos=Vector2(0, 603), dimensions=(235, 603))
 
@@ -38,9 +41,12 @@ class UIGroup(Group):
         print("Clearing buttons")
         for button in UIGroup.rendered_buttons.sprites():
             button.kill()
-        UIGroup.rendered_buttons.empty
 
     def custom_update(self):
+        top_bar = pygame.draw.rect(surface=pygame.display.get_surface(),
+                                   color=Colors.BLACK.value,
+                                   rect=[0, 0, SCREEN_WIDTH, 30],
+                                   width=0)
         self.update()
         self.draw(pygame.display.get_surface())
         UIGroup.rendered_buttons.update()

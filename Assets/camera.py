@@ -3,8 +3,6 @@ from pygame.math import Vector2
 from Assets.settings import SCREEN_WIDTH, SCREEN_HEIGHT
 from Assets.Units.unit import Unit
 from Assets.UserInterface.ui_group import UIGroup
-from Assets.Buildings.town_center import TownCenter
-from Assets.Buildings.states import BuildingState
 
 
 class CameraGroup(pygame.sprite.Group):
@@ -48,7 +46,11 @@ class CameraGroup(pygame.sprite.Group):
         self.__update_offset()
         for sprite in self.sprites():
             offset_pos = sprite.pos = sprite.rect.topleft + self.offset
-            self.displaySurface.blit(sprite.image, offset_pos)
+            sprite_coordinates = Vector2(sprite.pos)
+            if SCREEN_WIDTH > sprite_coordinates.x > -100 and\
+               SCREEN_HEIGHT > sprite_coordinates.y > -100:
+                # Draw only the sprites withing the screen dimensions and a bit to the side
+                self.displaySurface.blit(sprite.image, offset_pos)
             if issubclass(type(sprite), Unit):
                 sprite.update_rect(offset_pos)
 

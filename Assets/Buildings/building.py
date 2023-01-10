@@ -9,7 +9,7 @@ class Building(pygame.sprite.Sprite):
     tile_x = MAP_SETTINGS["Tiles"]["Size"]["x"]
     tile_y = MAP_SETTINGS["Tiles"]["Size"]["y"]
 
-    def __init__(self, group, texture, hp=1000, ct=20, to=2, pos=Vector2(0, 0)):
+    def __init__(self, group, texture, team=1, hp=1000, ct=20, to=2, pos=Vector2(0, 0)):
         super().__init__(group)
         self.texture = texture      # Image to use for the building
         self.state = BuildingState.PLACING   # Initial building state
@@ -22,6 +22,7 @@ class Building(pygame.sprite.Sprite):
         self.pos: Vector2 = pos      # Building Position
         self._start_ticks = 0  # Used as time to denote the construction start
         self._size = Vector2(self._tiles_occupied * self.tile_x, self._tiles_occupied * self.tile_y)  # Image dimensions
+        self.team = team
 
     def set_size(self, size: Vector2):
         self._size = size

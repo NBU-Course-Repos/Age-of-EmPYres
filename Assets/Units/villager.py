@@ -1,4 +1,3 @@
-import pygame
 from pygame.math import Vector2
 from Assets.Units.unit import Unit
 from Assets.Units.states import UnitState
@@ -10,8 +9,8 @@ from Assets.UserInterface.text import Text
 
 class Villager(Unit):
 
-    def __init__(self, group, pos=Vector2(0, 0), image="villager", hp=100, size=Vector2(30, 30)):
-        super().__init__(group, pos, image, hp, size, damage=3, speed=2)
+    def __init__(self, group, player, pos=Vector2(0, 0), image="villager", hp=100, size=Vector2(30, 30), team=1):
+        super().__init__(group, player, pos, image, hp, size, damage=3, speed=2, team=team)
         self.name = "villager"
         self.gather_rate = 1  # What amount of resources can be gather per second.
         # Might re-do it as a dictionary for the different types of resources
@@ -31,25 +30,26 @@ class Villager(Unit):
             ResourceType.FOOD: 0,
             ResourceType.GOLD: 0
         }
+        self.player = player
 
     def _generate_ui(self):
         ui = []
         bottom_bar = self.camera.ui_group.bottom_bar
-        x = 5
+        y = 10
         for resource in self.resource_carrying:
             ui.append([Text(text=f"{resource.value} {self.resource_carrying[resource]}",
-                            pos=Vector2(bottom_bar.rect.topright) + (-100, x))])
-            x += 15
+                            pos=Vector2(bottom_bar.rect.topright) + (-100, y))])
+            y += 15
         ui.extend(super()._generate_ui())
         return ui
 
     def _deposit_resources(self):
-        self.target_destination = self.camera.town_center.pos
+        self.target_destination = self.player.HQ.pos
         if not self._is_at_target():
             self._move()
         else:
             for resource in self.resource_carrying:
-            #    print(self.resource_carrying[resource])  # TO BE SWITCHED WITH ADDITION TO THE PLAYER's resources
+                self.player.resources[resource] += self.resource_carrying[resource]
                 self.resource_carrying[resource] = 0
             self.set_gather(self.task_object)
 

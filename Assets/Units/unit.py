@@ -6,7 +6,7 @@ from Assets.UserInterface.text import Text
 
 class Unit(pygame.sprite.Sprite):
 
-    def __init__(self, group, pos=Vector2(0, 0), image="", hp=100, size=Vector2(0, 0), speed=10, damage=0, name=""):
+    def __init__(self, group, player, pos=Vector2(0, 0),  image="", hp=100, size=Vector2(0, 0), speed=10, damage=0, name="", team=1):
         super().__init__(group)
         self.health_points = hp
         self.total_health = hp
@@ -26,15 +26,16 @@ class Unit(pygame.sprite.Sprite):
         self.camera = group
         self.ui = []
         self.border = None
+        self.team = team
 
     def update_rect(self, pos):
         self.pos = pos
 
     def _generate_ui(self):
         bottom_bar = self.camera.ui_group.bottom_bar
-        return [Text(text=f"{self.name}", pos=Vector2(bottom_bar.rect.topleft)),
-                Text(text=f"Damage {self.damage}", pos=Vector2(bottom_bar.rect.topleft) + (0, 20)),
-                Text(text=f"HP: {self.health_points}/{self.total_health}", pos=Vector2(bottom_bar.rect.topleft) + (0, 40))]
+        return [Text(text=f"{self.name}", pos=Vector2(bottom_bar.rect.topleft) + (0, 10)),
+                Text(text=f"Damage {self.damage}", pos=Vector2(bottom_bar.rect.topleft) + (0, 30)),
+                Text(text=f"HP: {self.health_points}/{self.total_health}", pos=Vector2(bottom_bar.rect.topleft) + (0, 50))]
 
     def _hide_ui(self):
         self.camera.ui_group.remove(self.ui)

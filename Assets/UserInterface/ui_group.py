@@ -38,7 +38,6 @@ class UIGroup(Group):
         print("Clearing buttons")
         for button in UIGroup.rendered_buttons.sprites():
             button.kill()
-        UIGroup.rendered_buttons.empty
 
     def custom_update(self):
         self.update()

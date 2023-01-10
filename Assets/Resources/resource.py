@@ -79,7 +79,6 @@ class Resource(Sprite):
 
     def _being_gathered(self):
         gather_rate = 0
-        self._hide_ui()
         if self._start_ticks == 0:
             self._start_ticks = pygame.time.get_ticks()
         time_stamp = int((pygame.time.get_ticks() - self._start_ticks)/1000)

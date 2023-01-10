@@ -3,8 +3,6 @@ from pygame.math import Vector2
 from Assets.settings import SCREEN_WIDTH, SCREEN_HEIGHT
 from Assets.Units.unit import Unit
 from Assets.UserInterface.ui_group import UIGroup
-from Assets.Buildings.town_center import TownCenter
-from Assets.Buildings.states import BuildingState
 
 
 class CameraGroup(pygame.sprite.Group):

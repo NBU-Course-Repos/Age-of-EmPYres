@@ -109,7 +109,7 @@ class Controls:
 
                 for resource in camera.resources.sprites():
                     if Controls.is_clicked(resource, mouse_pos):
-#                       Controls.__deselect_same(Resource)
+                # Controls.__deselect_same(Resource)
                         target = resource
                         break
 

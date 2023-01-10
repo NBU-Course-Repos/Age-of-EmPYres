@@ -6,4 +6,4 @@ class UnitState(Enum):
     MOVING = 2
     CONSTRUCTING = 3
     GATHERING = 4  # Gathering resources
-    OFFLOADING = 5
+    DEPOSITING = 5

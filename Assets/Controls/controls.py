@@ -1,6 +1,8 @@
 import pygame
 import sys
 from pygame.math import Vector2
+
+from Assets.Buildings.town_center import TownCenter
 from Assets.Units.villager import Villager
 from Assets.Buildings.house import House
 from Assets.Buildings.building import Building
@@ -106,6 +108,9 @@ class Controls:
                         target = building
                         building.highlight_foundation()
                         break
+                    elif Controls.is_clicked(building, mouse_pos) and type(building) == TownCenter:
+                        target = building
+                        break
 
                 for resource in camera.resources.sprites():
                     if Controls.is_clicked(resource, mouse_pos):
@@ -117,10 +122,13 @@ class Controls:
                     for obj in Controls.selectedObjects:
                         # if the Unit is a villager and there the target is a foundation,
                         # finish constructing it
-                        if issubclass(type(target), Building) and type(obj) == Villager:
-                            obj.set_construct(target)
-                        elif issubclass(type(target), Resource) and type(obj) == Villager:
-                            obj.set_gather(target)
+                        if type(obj) == Villager:
+                            if issubclass(type(target), TownCenter):
+                                obj.set_deposit()
+                            elif issubclass(type(target), Building):
+                                obj.set_construct(target)
+                            elif issubclass(type(target), Resource):
+                                obj.set_gather(target)
                         elif issubclass(type(obj), Unit):
                             obj.set_move(mouse_pos)
 

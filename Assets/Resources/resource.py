@@ -56,8 +56,8 @@ class Resource(Sprite):
 
     def _generate_ui(self):
         bottom_bar = self.camera.ui_group.bottom_bar
-        return [Text(text=f"{self.resource_type.value}", pos=Vector2(bottom_bar.rect.topleft)),
-                Text(text=f"Amount {self.amount}", pos=Vector2(bottom_bar.rect.topleft) + (0, 20))]
+        return [Text(text=f"{self.resource_type.value}", pos=Vector2(bottom_bar.rect.topleft) + (0, 10)),
+                Text(text=f"Amount {self.amount}", pos=Vector2(bottom_bar.rect.topleft) + (0, 30))]
 
     def _display_ui(self):
         self.camera.ui_group.remove(self.ui)

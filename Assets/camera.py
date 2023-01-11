@@ -54,3 +54,6 @@ class CameraGroup(pygame.sprite.Group):
             if issubclass(type(sprite), Unit):
                 sprite.update_rect(offset_pos)
 
+    def get_state(self):
+        # TODO Think if this is needed?
+        return self

@@ -1,7 +1,6 @@
 import pygame
 import sys
 from pygame.math import Vector2
-
 from Assets.Buildings.town_center import TownCenter
 from Assets.Units.villager import Villager
 from Assets.Buildings.house import House
@@ -10,6 +9,7 @@ from Assets.Controls.states import ControlStates
 from Assets.Buildings.states import BuildingState
 from Assets.Units.unit import Unit
 from Assets.Resources.resource import Resource
+from Assets.SaveSystem.save_system import SaveSystem
 
 
 class Controls:
@@ -43,9 +43,14 @@ class Controls:
     @staticmethod
     def event_handler(camera):
         for event in pygame.event.get():
+
             if event.type == pygame.QUIT:
+                SaveSystem.create_save_dir()
+                SaveSystem.to_be_saved("camera", camera)
+                SaveSystem.save_game()
                 pygame.quit()
                 sys.exit()
+
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:  # Turn on/off game pause
                 camera.ui_group.set_pause()
             # Check if left mouse button is clicked
@@ -140,4 +145,3 @@ class Controls:
                 Controls.state = ControlStates.PLACING
                 Controls.building = House(camera)
                 Controls.building.add(camera.buildings_group)
-

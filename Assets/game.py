@@ -11,14 +11,10 @@ screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
 pygame.display.set_caption("Age of Empyres")
 pygame.display.set_icon(pygame.image.load("Assets/Textures/grail.png"))
 camera = CameraGroup()
-
 world = Map(camera)
-
 clock = pygame.time.Clock()
 camera.custom_draw()
-
 start_ticks = pygame.time.get_ticks()
-
 player = Player(team=1, camera=camera)
 
 while True:

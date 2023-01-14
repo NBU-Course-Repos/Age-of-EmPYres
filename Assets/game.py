@@ -8,6 +8,7 @@ from Assets.Player.player import Player
 from Assets.SaveSystem.savable_object import SavableObject
 
 
+
 # Generate the Map before the pygame windows is started
 pygame.init()
 screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])

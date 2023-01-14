@@ -1,5 +1,5 @@
 from pygame.math import Vector2 as Vector2
-from Assets.settings import MAP_SETTINGS, SCREEN_HEIGHT, SCREEN_WIDTH
+from Assets.settings import MAP_SIZE, TILE_SIZE
 from Assets.tile import Tile
 from random import randint
 from Assets.Buildings.town_center import TownCenter
@@ -15,11 +15,6 @@ class Map:
         self.resources = []
         self.tree_count = 0
         self.stone_count = 0
-        self.__MAP_SIZE = Vector2((MAP_SETTINGS["Tiles"]["Count"]["x"],
-                                   MAP_SETTINGS["Tiles"]["Count"]["y"]))
-        
-        self.__TILE_SIZE = Vector2((MAP_SETTINGS["Tiles"]["Size"]["x"],
-                                    MAP_SETTINGS["Tiles"]["Size"]["y"]))
         self.__generate_terrain(camera)
         # self.__generate_resources(group)
         # camera.town_center = TownCenter([camera,camera.buildings_group])
@@ -29,7 +24,7 @@ class Map:
         # camera.town_center.state = BuildingState.BUILT
 
     def __generate_terrain(self, group):
-        total_map_size = self.__MAP_SIZE.elementwise()*self.__TILE_SIZE
+        total_map_size = MAP_SIZE.elementwise()*TILE_SIZE
         counter: int = 0
         for row in range(-int(total_map_size.y/2), int(total_map_size.y/2), 64):
             for col in range(-int(total_map_size.x/2), int(total_map_size.x/2), 64):

@@ -1,3 +1,4 @@
+from pygame.math import Vector2
 # Global vars used across the different python files
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 704
@@ -13,3 +14,8 @@ MAP_SETTINGS = {
         }
     }
 }
+MAP_SIZE = Vector2((MAP_SETTINGS["Tiles"]["Count"]["x"],
+                    MAP_SETTINGS["Tiles"]["Count"]["y"]))
+
+TILE_SIZE = Vector2((MAP_SETTINGS["Tiles"]["Size"]["x"],
+                     MAP_SETTINGS["Tiles"]["Size"]["y"]))

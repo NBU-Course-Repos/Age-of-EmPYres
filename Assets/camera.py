@@ -6,6 +6,10 @@ from Assets.settings import SCREEN_WIDTH, SCREEN_HEIGHT
 from Assets.Units.unit import Unit
 from Assets.UserInterface.ui_group import UIGroup
 from Assets.Buildings.building import Building
+from Assets.settings import MAP_SIZE, TILE_SIZE
+
+MAP_BORDER_Y = (MAP_SIZE.elementwise()*TILE_SIZE).y/2
+MAP_BORDER_X = (MAP_SIZE.elementwise()*TILE_SIZE).x/2
 
 
 class CameraGroup(pygame.sprite.Group):
@@ -19,7 +23,7 @@ class CameraGroup(pygame.sprite.Group):
         self.buildings_group = pygame.sprite.Group()
         self.resources = pygame.sprite.Group()
         self.has_mill = False
-        self.groups = [self.unit_group, self.buildings_group, self.resources]  # To be used in custom draw
+        self.total_offset_x = self.total_offset_y = 0
 
         # TO DO: Set Offset Limit based on map size
     def __update_offset(self):
@@ -29,16 +33,20 @@ class CameraGroup(pygame.sprite.Group):
         mouse_x = mouse_pos[0]
         mouse_y = mouse_pos[1]
         # Left side of screen
-        if mouse_x <= 3:
+        if mouse_x <= 3 and self.total_offset_x > -MAP_BORDER_X:
+            self.total_offset_x -= offset_pixels
             self.offsetX += offset_pixels
         # Right side of screen
-        elif mouse_x >= SCREEN_WIDTH - 3:
+        elif mouse_x >= SCREEN_WIDTH - 3 and self.total_offset_x < MAP_BORDER_X:
+            self.total_offset_x += offset_pixels
             self.offsetX -= offset_pixels
         # Top of the screen
-        if mouse_y <= 3:
+        if mouse_y <= 3 and self.total_offset_y > -MAP_BORDER_Y:
+            self.total_offset_y -= offset_pixels
             self.offsetY += offset_pixels
         # Bottom of the screen
-        elif mouse_y >= SCREEN_HEIGHT - 3:
+        elif mouse_y >= SCREEN_HEIGHT - 3 and self.total_offset_y < MAP_BORDER_Y:
+            self.total_offset_y += offset_pixels
             self.offsetY -= offset_pixels
         self.offset.update(self.offsetX, self.offsetY)
 
@@ -46,10 +54,7 @@ class CameraGroup(pygame.sprite.Group):
         # To Do: Don't update unit sprite if in state moving
         self.__update_offset()
         for sprite in self.sprites():
-            if issubclass(type(sprite), Building) and sprite.state == BuildingState.PLACING:
-                offset_pos = sprite.rect.center = pygame.mouse.get_pos()
-            else:
-                offset_pos = sprite.pos = sprite.rect.topleft + self.offset
+            offset_pos = sprite.pos = sprite.rect.topleft + self.offset
             sprite_coordinates = Vector2(sprite.pos)
             if SCREEN_WIDTH > sprite_coordinates.x > -100 and\
                SCREEN_HEIGHT > sprite_coordinates.y > -100:

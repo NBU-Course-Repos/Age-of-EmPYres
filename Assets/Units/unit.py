@@ -1,3 +1,5 @@
+import os
+
 import pygame
 from pygame.math import Vector2
 from Assets.Units.states import UnitState
@@ -16,7 +18,7 @@ class Unit(pygame.sprite.Sprite):
         self.target_destination = pos
         self.name = ""
         self.movement_speed = speed
-        self.image = pygame.image.load(f"Assets/Textures/Units/{image}.png")
+        self.image = pygame.image.load(f"{os.getcwd()}/Textures/Units/{image}.png")
         self.image = pygame.transform.scale(self.image, self.size)
         self.rect = self.image.get_rect(topleft=self.pos)
         self.is_selected = False
@@ -57,7 +59,7 @@ class Unit(pygame.sprite.Sprite):
         if not self.is_selected:
             return
         self.is_selected = False
-        self.image = pygame.image.load(f"Assets/Textures/Units/{self.name}.png")
+        self.image = pygame.image.load(f"{os.getcwd()}/Textures/Units/{self.name}.png")
         self.image = pygame.transform.scale(self.image, self.size)
         self.camera.ui_group.clear_buttons()
         self._hide_ui()
@@ -69,7 +71,7 @@ class Unit(pygame.sprite.Sprite):
                                        width=1)
 
     def delete_border(self):
-        self.image = pygame.image.load(f"Assets/Textures/{self.tile_type}.png")
+        self.image = pygame.image.load(f"{os.getcwd()}/Textures/{self.tile_type}.png")
 
     def set_move(self, pos: Vector2):
         self.target_destination = pos

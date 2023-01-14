@@ -22,9 +22,9 @@ class Resource(Sprite):
         self.is_selected = False
 
         try:
-            self.image = pygame.image.load(f"Assets/Textures/Resources/{self.resource_type.value}_{image_enum}.png").convert_alpha()
+            self.image = pygame.image.load(f"{os.getcwd()}/Textures/Resources/{self.resource_type.value}_{image_enum}.png")
         except FileNotFoundError:
-            self.image = pygame.image.load(f"Assets/Textures/Resources/{self.resource_type}_1.png").convert_alpha()
+            self.image = pygame.image.load(f"{os.getcwd()}/Textures/Resources/{self.resource_type}_1.png")
 
         if self.resource_type == ResourceType.WOOD or self.resource_type == ResourceType.STONE:
             self.image = self.image = pygame.transform.scale(self.image, (64, 64))

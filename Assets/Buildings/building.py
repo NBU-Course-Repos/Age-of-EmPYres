@@ -41,7 +41,7 @@ class Building(pygame.sprite.Sprite):
             self._workers.remove(worker)
 
     def _set_image(self, image, alpha=255):
-        self.image = pygame.image.load(f"Assets//Textures//Buildings//{image}.png").convert_alpha()
+        self.image = pygame.image.load(f"Assets//Textures//Buildings//{image}.png")
         self.image = pygame.transform.scale(self.image, self._size)
         # self.image.set_alpha(alpha)
         self.rect = self.image.get_rect(center=self.pos)

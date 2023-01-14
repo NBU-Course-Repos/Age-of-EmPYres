@@ -1,15 +1,17 @@
 import pygame
+import os
 from Assets.settings import SCREEN_WIDTH, SCREEN_HEIGHT
 from Assets.map import Map
 from Assets.camera import CameraGroup
 from Assets.Controls.controls import Controls
 from Assets.Player.player import Player
 
+
 # Generate the Map before the pygame windows is started
 pygame.init()
 screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
 pygame.display.set_caption("Age of Empyres")
-pygame.display.set_icon(pygame.image.load("Assets/Textures/grail.png"))
+pygame.display.set_icon(pygame.image.load(f"{os.getcwd()}/Textures/grail.png"))
 camera = CameraGroup()
 world = Map(camera)
 clock = pygame.time.Clock()

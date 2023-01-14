@@ -1,3 +1,5 @@
+import os
+
 import pygame
 from pygame.math import Vector2 as Vector2
 from Assets.settings import MAP_SETTINGS
@@ -13,7 +15,7 @@ class Tile(pygame.sprite.Sprite):
         self.TILE_SIZE = Vector2((MAP_SETTINGS["Tiles"]["Size"]["x"],
                                   MAP_SETTINGS["Tiles"]["Size"]["y"]))
         self.tile_type = tile_type
-        self.image = pygame.image.load(f"Assets/Textures/{self.tile_type}.png")
+        self.image = pygame.image.load(f"{os.getcwd()}/Textures/{self.tile_type}.png")
         self.image = pygame.transform.scale(self.image, self.TILE_SIZE)
         self.rect = self.image.get_rect(topleft=self.pos)
         self.border: pygame.Rect = None
@@ -25,4 +27,4 @@ class Tile(pygame.sprite.Sprite):
                                        width=1)
 
     def delete_border(self):
-        self.image = pygame.image.load(f"Assets/Textures/{self.tile_type}.png")
+        self.image = pygame.image.load(f"{os.getcwd()}/Textures/{self.tile_type}.png")

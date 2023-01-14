@@ -5,7 +5,7 @@ from datetime import datetime
 
 class SaveSystem:
 
-    _saves_base_path = "Assets/Data/Saves/"
+    _saves_base_path = "{os.getcwd()}/Data/Saves/"
     _save_dir = ""
     _objects_to_save = []
 

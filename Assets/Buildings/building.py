@@ -41,10 +41,18 @@ class Building(pygame.sprite.Sprite):
             self._workers.remove(worker)
 
     def _set_image(self, image, alpha=255):
-        self.image = pygame.image.load(f"Assets//Textures//Buildings//{image}.png")
+        self.image = pygame.image.load(f"Assets//Textures//Buildings//{image}.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, self._size)
-        self.image.set_alpha(alpha)
+        # self.image.set_alpha(alpha)
         self.rect = self.image.get_rect(center=self.pos)
+        self.mask = pygame.mask.from_surface(self.image, threshold=127)
+        print(self.mask.count())
+        # print("Image size")
+        # print(self.image.get_size())
+        # print("Mask size")
+        # print(self.mask.get_size())
+        # print("Ret size")
+        # print(self.rect.size)
 
     def construct(self):
         if self._remaining_build_time == 0:  # Complete construction
@@ -69,11 +77,18 @@ class Building(pygame.sprite.Sprite):
 
     def placing(self):
         self.pos = Vector2(pygame.mouse.get_pos())
-        self._set_image(self.texture, alpha=255)
+        self._set_image(self.texture)
 
     def highlight_foundation(self):
         if self.state != BuildingState.BUILT:
             self._set_image("foundation-selection")
+
+    def is_colliding(self):
+        for sprite in self.groups()[0].resources.sprites():
+            print(self.mask.overlap_area(sprite.mask, (0, 0)))
+            if self.mask.overlap_area(sprite.mask, (0, 0)) > 0:
+                return True
+        return False
 
     def custom_update(self):
         if self.state == BuildingState.PLACING:

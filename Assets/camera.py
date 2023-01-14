@@ -1,15 +1,17 @@
 import pygame
 from pygame.math import Vector2
+
+from Assets.Buildings.states import BuildingState
 from Assets.settings import SCREEN_WIDTH, SCREEN_HEIGHT
 from Assets.Units.unit import Unit
 from Assets.UserInterface.ui_group import UIGroup
+from Assets.Buildings.building import Building
 
 
 class CameraGroup(pygame.sprite.Group):
 
     def __init__(self):
         super().__init__(self)
-        self.displaySurface = pygame.display.get_surface()
         self.offset = pygame.math.Vector2(0, 0)
         self.offsetX = self.offsetY = 0
         self.ui_group = UIGroup()
@@ -17,7 +19,6 @@ class CameraGroup(pygame.sprite.Group):
         self.buildings_group = pygame.sprite.Group()
         self.resources = pygame.sprite.Group()
         self.has_mill = False
-        self.town_center = None
         self.groups = [self.unit_group, self.buildings_group, self.resources]  # To be used in custom draw
 
         # TO DO: Set Offset Limit based on map size
@@ -45,15 +46,19 @@ class CameraGroup(pygame.sprite.Group):
         # To Do: Don't update unit sprite if in state moving
         self.__update_offset()
         for sprite in self.sprites():
-            offset_pos = sprite.pos = sprite.rect.topleft + self.offset
+            if issubclass(type(sprite), Building) and sprite.state == BuildingState.PLACING:
+                offset_pos = sprite.rect.center = pygame.mouse.get_pos()
+            else:
+                offset_pos = sprite.pos = sprite.rect.topleft + self.offset
             sprite_coordinates = Vector2(sprite.pos)
             if SCREEN_WIDTH > sprite_coordinates.x > -100 and\
                SCREEN_HEIGHT > sprite_coordinates.y > -100:
                 # Draw only the sprites withing the screen dimensions and a bit to the side
-                self.displaySurface.blit(sprite.image, offset_pos)
+                pygame.display.get_surface().blit(sprite.image, offset_pos)
             if issubclass(type(sprite), Unit):
                 sprite.update_rect(offset_pos)
 
     def get_state(self):
-        # TODO Think if this is needed?
+        for item in self.__dict__:
+            item
         return self

@@ -4,6 +4,7 @@ from Assets.map import Map
 from Assets.camera import CameraGroup
 from Assets.Controls.controls import Controls
 from Assets.Player.player import Player
+from Assets.SaveSystem.savable_object import SavableObject
 
 # Generate the Map before the pygame windows is started
 pygame.init()
@@ -16,6 +17,9 @@ clock = pygame.time.Clock()
 camera.custom_draw()
 start_ticks = pygame.time.get_ticks()
 player = Player(team=1, camera=camera)
+
+for unit in camera.unit_group:
+    SavableObject.pickle(unit)
 
 while True:
     new_ticks = pygame.time.get_ticks()

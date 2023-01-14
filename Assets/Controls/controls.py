@@ -45,9 +45,9 @@ class Controls:
         for event in pygame.event.get():
 
             if event.type == pygame.QUIT:
-                SaveSystem.create_save_dir()
-                SaveSystem.to_be_saved("camera", camera)
-                SaveSystem.save_game()
+                # SaveSystem.create_save_dir()
+                # SaveSystem.to_be_saved("camera", camera)
+                # SaveSystem.save_game()
                 pygame.quit()
                 sys.exit()
 
@@ -57,12 +57,14 @@ class Controls:
             if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0]:
                 if Controls.state == ControlStates.PLACING:
                     # If in Building placement mode
-                    Controls.building.construct()  # Here if the building is not built, its state is set to CONSTRUCTING
-                    Controls.state = ControlStates.UNIT
-                    for unit in Controls.selectedObjects:
-                        if type(unit) == Villager:
-                            unit.set_construct(Controls.building)
-
+                    if not Controls.building.is_colliding():
+                        Controls.building.construct()  # Here if the building is not built, its state is set to CONSTRUCTING
+                        Controls.state = ControlStates.UNIT
+                        for unit in Controls.selectedObjects:
+                            if type(unit) == Villager:
+                                unit.set_construct(Controls.building)
+                    else:
+                        print("Can't place. There is a collision")
                 mouse_pos = Vector2(pygame.mouse.get_pos())
                 selected_count = 0
 
@@ -130,11 +132,14 @@ class Controls:
                         if type(obj) == Villager:
                             if issubclass(type(target), TownCenter):
                                 obj.set_deposit()
+                                continue
                             elif issubclass(type(target), Building):
                                 obj.set_construct(target)
+                                continue
                             elif issubclass(type(target), Resource):
                                 obj.set_gather(target)
-                        elif issubclass(type(obj), Unit):
+                                continue
+                        if issubclass(type(obj), Unit):
                             obj.set_move(mouse_pos)
 
                 elif Controls.state == ControlStates.PLACING:

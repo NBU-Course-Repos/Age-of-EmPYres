@@ -1,6 +1,7 @@
 import os
 import pickle
 from datetime import datetime
+from pprint import pprint
 
 
 class SaveSystem:
@@ -38,9 +39,10 @@ class SaveSystem:
     def save_game():
         for obj in SaveSystem._objects_to_save:
             key = (list(obj.keys()))[0]
-            print(f"saving: {key}")
+            # print(f"saving: {key}")
             with open(fr"{SaveSystem._save_dir}\\{key}.save", "wb") as file:
-                print(str(obj[key]))
+                print(type(obj[key].__dict__))
+                pprint(obj[key].__dict__)
                 pickle.dump(obj[key], file)
 
     @staticmethod

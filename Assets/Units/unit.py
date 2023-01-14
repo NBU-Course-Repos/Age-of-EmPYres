@@ -2,6 +2,7 @@ import pygame
 from pygame.math import Vector2
 from Assets.Units.states import UnitState
 from Assets.UserInterface.text import Text
+from Assets.SaveSystem.savable_object import SavableObject
 
 
 class Unit(pygame.sprite.Sprite):
@@ -106,7 +107,6 @@ class Unit(pygame.sprite.Sprite):
                 self.pos.y = self.rect.y
         else:
             self.state = UnitState.STATE_IDLE
-
 
     def custom_update(self):
         if self.is_selected:

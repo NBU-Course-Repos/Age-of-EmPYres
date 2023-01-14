@@ -37,7 +37,7 @@ class CameraGroup(pygame.sprite.Group):
             self.total_offset_x -= offset_pixels
             self.offsetX += offset_pixels
         # Right side of screen
-        elif mouse_x >= SCREEN_WIDTH - 3 and self.total_offset_x < MAP_BORDER_X:
+        elif mouse_x >= SCREEN_WIDTH - 3 and self.total_offset_x < MAP_BORDER_X - (SCREEN_WIDTH + 50):
             self.total_offset_x += offset_pixels
             self.offsetX -= offset_pixels
         # Top of the screen
@@ -45,7 +45,7 @@ class CameraGroup(pygame.sprite.Group):
             self.total_offset_y -= offset_pixels
             self.offsetY += offset_pixels
         # Bottom of the screen
-        elif mouse_y >= SCREEN_HEIGHT - 3 and self.total_offset_y < MAP_BORDER_Y:
+        elif mouse_y >= SCREEN_HEIGHT - 3 and self.total_offset_y < MAP_BORDER_Y - (SCREEN_HEIGHT + 50):
             self.total_offset_y += offset_pixels
             self.offsetY -= offset_pixels
         self.offset.update(self.offsetX, self.offsetY)

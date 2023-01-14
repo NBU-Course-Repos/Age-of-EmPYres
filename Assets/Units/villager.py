@@ -10,7 +10,7 @@ from Assets.UserInterface.text import Text
 class Villager(Unit):
 
     def __init__(self, group, player, pos=Vector2(0, 0), image="villager", hp=100, size=Vector2(30, 30), team=1):
-        super().__init__(group, player, pos, image, hp, size, damage=3, speed=2, team=team)
+        super().__init__(group, player, pos, image, hp, size, damage=3, speed=5, team=team)
         self.name = "villager"
         self.gather_rate = 1  # What amount of resources can be gather per second.
         # Might re-do it as a dictionary for the different types of resources
@@ -85,6 +85,7 @@ class Villager(Unit):
             self.target_destination = self.task_object.get_position()
             if not self._is_at_target():
                 self._move()
+            else:
                 self.task_object.add_worker(self)
         else:
             self.task_object.remove_worker(self)
@@ -95,6 +96,7 @@ class Villager(Unit):
             self.target_destination = self.task_object.get_position()
             if not self._is_at_target():
                 self._move()
+            else:
                 self.task_object.add_worker(self)
         else:
             self.task_object.remove_worker(self)

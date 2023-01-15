@@ -10,16 +10,16 @@ class Tile(pygame.sprite.Sprite):
 
     def __init__(self, pos, group=pygame.sprite.AbstractGroup(), tile_type=""):
         super().__init__()
-        group.add(self)
         self.pos = pos
         self.group = group
         self.TILE_SIZE = Vector2((MAP_SETTINGS["Tiles"]["Size"]["x"],
                                   MAP_SETTINGS["Tiles"]["Size"]["y"]))
         self.tile_type = tile_type
-        self.image = pygame.image.load(f"{os.getcwd()}/Textures/{self.tile_type}.png")
+        self.image = pygame.image.load(f"{os.getcwd()}/Assets/Textures/{self.tile_type}.png")
         self.image = pygame.transform.scale(self.image, self.TILE_SIZE)
         self.rect = self.image.get_rect(topleft=self.pos)
         self.border: pygame.Rect = None
+        group.add(self)
 
     def draw_border(self):
         self.border = pygame.draw.rect(surface=self.image,
@@ -28,4 +28,4 @@ class Tile(pygame.sprite.Sprite):
                                        width=1)
 
     def delete_border(self):
-        self.image = pygame.image.load(f"{os.getcwd()}/Textures/{self.tile_type}.png")
+        self.image = pygame.image.load(f"{os.getcwd()}/Assets/Textures/{self.tile_type}.png")

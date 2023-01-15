@@ -11,7 +11,6 @@ from Assets.UserInterface.text import Text
 class Resource(Sprite):
     def __init__(self, pos: Vector2, camera: Group, rtype: ResourceType, image_enum=1, amount=100, tile=None):
         super().__init__()
-        camera.add(self)
         self.camera = camera
         self._workers = Group()     # Sprite.Group to store the workers gathering this resource
         self.pos = Vector2(pos)
@@ -22,10 +21,11 @@ class Resource(Sprite):
         self._start_ticks = 0
         self._time_passed = 0
         self.is_selected = False
+        camera.add(self)
         try:
-            self.image = pygame.image.load(f"{os.getcwd()}/Textures/Resources/{self.resource_type.value}_{image_enum}.png")
+            self.image = pygame.image.load(f"{os.getcwd()}/Assets/Textures/Resources/{self.resource_type.value}_{image_enum}.png")
         except FileNotFoundError:
-            self.image = pygame.image.load(f"{os.getcwd()}/Textures/Resources/{self.resource_type}_1.png")
+            self.image = pygame.image.load(f"{os.getcwd()}/Assets/Textures/Resources/{self.resource_type}_1.png")
 
         if self.resource_type == ResourceType.WOOD or self.resource_type == ResourceType.STONE:
             self.image = self.image = pygame.transform.scale(self.image, (64, 64))

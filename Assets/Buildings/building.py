@@ -12,7 +12,6 @@ class Building(pygame.sprite.Sprite):
 
     def __init__(self, group, texture, team=1, hp=1000, ct=20, to=2, pos=Vector2(0, 0)):
         super().__init__()
-        group.add(self)
         self.camera = group
         self.texture = texture      # Image to use for the building
         self.state = BuildingState.PLACING   # Initial building state
@@ -26,6 +25,7 @@ class Building(pygame.sprite.Sprite):
         self._start_ticks = 0  # Used as time to denote the construction start
         self._size = Vector2(self._tiles_occupied * self.tile_x, self._tiles_occupied * self.tile_y)  # Image dimensions
         self.team = team
+        group.add(self)
 
     def set_size(self, size: Vector2):
         self._size = size
@@ -44,7 +44,7 @@ class Building(pygame.sprite.Sprite):
             self._workers.remove(worker)
 
     def _set_image(self, image, alpha=255):
-        self.image = pygame.image.load(f"{os.getcwd()}//Textures//Buildings//{image}.png")
+        self.image = pygame.image.load(f"{os.getcwd()}/Assets//Textures//Buildings//{image}.png")
         self.image = pygame.transform.scale(self.image, self._size)
         # self.image.set_alpha(alpha)
         self.rect = self.image.get_rect(center=self.pos)

@@ -25,22 +25,29 @@ class Camera:
         self.resource_group = pygame.sprite.Group()
         self.mutable = pygame.sprite.Group()
         self.tile_group = pygame.sprite.Group()
+        self.rendered_sprites = pygame.sprite.Group()
         self.has_mill = False
         self.total_offset_x = self.total_offset_y = 0
 
     def __add_to_subgroup(self, sprite):
-        if issubclass(type(sprite), Building):
-            sprite.add([self.building_group, self.mutable])
-        elif issubclass(type(sprite), Unit):
-            sprite.add([self.unit_group, self.mutable])
-        elif issubclass(type(sprite), Resource):
-            sprite.add([self.resource_group, self.mutable])
-        elif issubclass(type(sprite), UI) or issubclass(type(sprite), Button):
-            self.ui_group.add(sprite)
-        elif issubclass(type(sprite), Tile):
-            self.tile_group.add(sprite)
+        try:
+            if not issubclass(type(sprite), Tile) and self.__to_render(sprite):
+                self.rendered_sprites.add(sprite)
+            if issubclass(type(sprite), Building):
+                sprite.add([self.building_group, self.mutable])
+            elif issubclass(type(sprite), Unit):
+                sprite.add([self.unit_group, self.mutable])
+            elif issubclass(type(sprite), Resource):
+                sprite.add([self.resource_group, self.mutable])
+            elif issubclass(type(sprite), UI) or issubclass(type(sprite), Button):
+                self.ui_group.add(sprite)
+            elif issubclass(type(sprite), Tile):
+                self.tile_group.add(sprite)
+        except AttributeError:
+            for item in sprite:
+                self.__add_to_subgroup(item)
 
-    def add(self, *sprites):
+    def add(self, sprites):
         try:
             for sprite in sprites:
                 self.__add_to_subgroup(sprite)
@@ -74,21 +81,31 @@ class Camera:
             self.offsetY -= offset_pixels
         self.offset.update(self.offsetX, self.offsetY)
 
+    @staticmethod
+    def __to_render(sprite):
+        sprite_coordinates = Vector2(sprite.pos)
+        return (SCREEN_WIDTH > sprite_coordinates.x > -100 and
+                SCREEN_HEIGHT > sprite_coordinates.y > -100)
+
     def custom_draw(self):
         # To Do: Don't update unit sprite if in state moving
         self.__update_offset()
         for tile in self.tile_group:
-            pygame.display.get_surface().blit(tile.image, tile.rect.topleft)
-        # TODO: CHeck if this is causing major performance issues and if so what alternative is there to it
-        for sprite in sorted(self.mutable, key=lambda sprite: sprite.rect.centery):
+            offset_pos = tile.pos = tile.rect.topleft + self.offset
+            if self.__to_render(tile):
+                pygame.display.get_surface().blit(tile.image, offset_pos)
+
+        for sprite in self.mutable:
             offset_pos = sprite.pos = sprite.rect.topleft + self.offset
-            sprite_coordinates = Vector2(sprite.pos)
-            if SCREEN_WIDTH > sprite_coordinates.x > -100 and\
-               SCREEN_HEIGHT > sprite_coordinates.y > -100:
-                # Draw only the sprites withing the screen dimensions and a bit to the side
-                pygame.display.get_surface().blit(sprite.image, offset_pos)
+            if self.__to_render(sprite):
+                self.rendered_sprites.add(sprite)
+            elif self.rendered_sprites.has(sprite):
+                self.rendered_sprites.remove(sprite)
             if issubclass(type(sprite), Unit):
                 sprite.update_rect(offset_pos)
+
+        for sprite in sorted(self.rendered_sprites, key=lambda sprite: sprite.rect.centery):
+            pygame.display.get_surface().blit(sprite.image, sprite.pos)
 
     def update(self):
         for sprite in self.mutable:

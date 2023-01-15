@@ -9,7 +9,7 @@ class Button(pygame.sprite.Sprite):
         self.group = group
         self.border_dimensions = dimensions
         self.pos = pos
-        self.image = pygame.image.load(f"{os.getcwd()}/Textures/Icons/{image}.png")
+        self.image = pygame.image.load(f"{os.getcwd()}/Assets/Textures/Icons/{image}.png")
         self.image = pygame.transform.scale(self.image, self.border_dimensions)
         self.rect = self.image.get_rect(topleft=self.pos)
 

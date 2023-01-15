@@ -13,7 +13,7 @@ from Assets.SaveSystem.savable_object import SavableObject
 pygame.init()
 screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
 pygame.display.set_caption("Age of Empyres")
-pygame.display.set_icon(pygame.image.load(f"{os.getcwd()}/Textures/grail.png"))
+pygame.display.set_icon(pygame.image.load(f"{os.getcwd()}/Assets/Textures/grail.png"))
 camera = Camera()
 world = Map(camera)
 clock = pygame.time.Clock()

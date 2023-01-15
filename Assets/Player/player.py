@@ -27,10 +27,9 @@ class Player:
     def _player_setup(self):
         self.HQ = TownCenter(self.camera, self.team)
         self.HQ.instantly_build()
-        self.HQ.add(self.camera.buildings_group)
         pos = Vector2(self.HQ.rect.left)
         for count in range(0, self.units_cur):
-            Villager(self.camera, player=self, pos=pos).add(self.camera.unit_group)
+            Villager(self.camera, player=self, pos=pos)
             pos += Vector2(0, 50)
 
     def _generate_ui(self):

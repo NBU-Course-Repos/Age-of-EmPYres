@@ -1,5 +1,4 @@
 import os
-
 import pygame
 from pygame.sprite import Sprite
 from pygame.math import Vector2
@@ -11,7 +10,8 @@ from Assets.UserInterface.text import Text
 
 class Resource(Sprite):
     def __init__(self, pos: Vector2, camera: Group, rtype: ResourceType, image_enum=1, amount=100, tile=None):
-        super().__init__(camera)
+        super().__init__()
+        camera.add(self)
         self.camera = camera
         self._workers = Group()     # Sprite.Group to store the workers gathering this resource
         self.pos = Vector2(pos)
@@ -22,7 +22,6 @@ class Resource(Sprite):
         self._start_ticks = 0
         self._time_passed = 0
         self.is_selected = False
-
         try:
             self.image = pygame.image.load(f"{os.getcwd()}/Textures/Resources/{self.resource_type.value}_{image_enum}.png")
         except FileNotFoundError:
@@ -30,9 +29,11 @@ class Resource(Sprite):
 
         if self.resource_type == ResourceType.WOOD or self.resource_type == ResourceType.STONE:
             self.image = self.image = pygame.transform.scale(self.image, (64, 64))
-
+        # self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect(midbottom=tile.rect.center)
-        self.mask = pygame.mask.from_surface(self.image, threshold=200)
+        self.mask = pygame.mask.from_surface(self.image)
+        # ls = self.mask.outline()
+        # pygame.draw.lines(self.image, (200, 150, 150), 1, ls)
         # self.add(group.resources)
         self.ui = []
 
@@ -65,7 +66,7 @@ class Resource(Sprite):
     def _display_ui(self):
         self.camera.ui_group.remove(self.ui)
         self.ui = self._generate_ui() # Updates the Amount text
-        self.camera.ui_group.add(self.ui)
+        self.camera.add(self.ui)
 
     def _hide_ui(self):
         for ui in self.ui:

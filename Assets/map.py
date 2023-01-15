@@ -37,7 +37,7 @@ class Map:
 
     def __generate_resources(self, pos: Vector2, camera, resource: ResourceType, image_enum: int, tile):
         obj = Resource(pos, camera, resource, image_enum, tile=tile)
-        obj.add(camera.resources)
+        obj.add(camera.resource_group)
         if resource == ResourceType.WOOD:
             self.tree_count += 1
         if resource == ResourceType.STONE:

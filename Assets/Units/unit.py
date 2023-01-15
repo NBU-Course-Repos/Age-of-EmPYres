@@ -10,7 +10,8 @@ from Assets.SaveSystem.savable_object import SavableObject
 class Unit(pygame.sprite.Sprite):
 
     def __init__(self, group, player, pos=Vector2(0, 0),  image="", hp=100, size=Vector2(0, 0), speed=10, damage=0, name="", team=1):
-        super().__init__(group)
+        super().__init__()
+        group.add(self)
         self.health_points = hp
         self.total_health = hp
         self.size = size
@@ -46,7 +47,7 @@ class Unit(pygame.sprite.Sprite):
     def _display_ui(self):
         self._hide_ui()
         self.ui = self._generate_ui()
-        self.camera.ui_group.add(self.ui)
+        self.camera.add(self.ui)
 
     def select(self):
         if self.is_selected:

@@ -9,7 +9,8 @@ class Tile(pygame.sprite.Sprite):
     TILE_VARIATIONS = ['sand', 'dirt']
 
     def __init__(self, pos, group=pygame.sprite.AbstractGroup(), tile_type=""):
-        super().__init__(group)
+        super().__init__()
+        group.add(self)
         self.pos = pos
         self.group = group
         self.TILE_SIZE = Vector2((MAP_SETTINGS["Tiles"]["Size"]["x"],

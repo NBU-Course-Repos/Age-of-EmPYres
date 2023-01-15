@@ -1,31 +1,55 @@
 import pygame
 from pygame.math import Vector2
-
-from Assets.Buildings.states import BuildingState
 from Assets.settings import SCREEN_WIDTH, SCREEN_HEIGHT
 from Assets.Units.unit import Unit
 from Assets.UserInterface.ui_group import UIGroup
 from Assets.Buildings.building import Building
 from Assets.settings import MAP_SIZE, TILE_SIZE
+from Assets.Resources.resource import Resource
+from Assets.UserInterface.ui import UI
+from Assets.UserInterface.Buttons.button import Button
+from Assets.tile import Tile
 
 MAP_BORDER_Y = (MAP_SIZE.elementwise()*TILE_SIZE).y/2
 MAP_BORDER_X = (MAP_SIZE.elementwise()*TILE_SIZE).x/2
 
 
-class CameraGroup(pygame.sprite.Group):
+class Camera:
 
     def __init__(self):
-        super().__init__(self)
         self.offset = pygame.math.Vector2(0, 0)
         self.offsetX = self.offsetY = 0
         self.ui_group = UIGroup()
         self.unit_group = pygame.sprite.Group()
-        self.buildings_group = pygame.sprite.Group()
-        self.resources = pygame.sprite.Group()
+        self.building_group = pygame.sprite.Group()
+        self.resource_group = pygame.sprite.Group()
+        self.mutable = pygame.sprite.Group()
+        self.tile_group = pygame.sprite.Group()
         self.has_mill = False
         self.total_offset_x = self.total_offset_y = 0
 
-        # TO DO: Set Offset Limit based on map size
+    def __add_to_subgroup(self, sprite):
+        if issubclass(type(sprite), Building):
+            sprite.add([self.building_group, self.mutable])
+        elif issubclass(type(sprite), Unit):
+            sprite.add([self.unit_group, self.mutable])
+        elif issubclass(type(sprite), Resource):
+            sprite.add([self.resource_group, self.mutable])
+        elif issubclass(type(sprite), UI) or issubclass(type(sprite), Button):
+            self.ui_group.add(sprite)
+        elif issubclass(type(sprite), Tile):
+            self.tile_group.add(sprite)
+
+    def add(self, *sprites):
+        try:
+            for sprite in sprites:
+                self.__add_to_subgroup(sprite)
+        except TypeError:
+            self.__add_to_subgroup(sprites)
+        else:
+            pass
+            # TODO Log error message
+
     def __update_offset(self):
         # By How much should the screen move
         offset_pixels = 15
@@ -53,7 +77,10 @@ class CameraGroup(pygame.sprite.Group):
     def custom_draw(self):
         # To Do: Don't update unit sprite if in state moving
         self.__update_offset()
-        for sprite in self.sprites():
+        for tile in self.tile_group:
+            pygame.display.get_surface().blit(tile.image, tile.rect.topleft)
+        # TODO: CHeck if this is causing major performance issues and if so what alternative is there to it
+        for sprite in sorted(self.mutable, key=lambda sprite: sprite.rect.centery):
             offset_pos = sprite.pos = sprite.rect.topleft + self.offset
             sprite_coordinates = Vector2(sprite.pos)
             if SCREEN_WIDTH > sprite_coordinates.x > -100 and\
@@ -63,7 +90,10 @@ class CameraGroup(pygame.sprite.Group):
             if issubclass(type(sprite), Unit):
                 sprite.update_rect(offset_pos)
 
+    def update(self):
+        for sprite in self.mutable:
+            sprite.custom_update()
+
     def get_state(self):
-        for item in self.__dict__:
-            item
-        return self
+        pass
+        # TODO: Write a custom method to serialize the Class data

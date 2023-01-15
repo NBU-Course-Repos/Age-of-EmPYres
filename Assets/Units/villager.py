@@ -49,7 +49,7 @@ class Villager(Unit):
             self._move()
         else:
             for resource in self.resource_carrying:
-                self.player.resources[resource] += self.resource_carrying[resource]
+                self.player.resource_group[resource] += self.resource_carrying[resource]
                 self.resource_carrying[resource] = 0
             self.set_gather(self.task_object)
 

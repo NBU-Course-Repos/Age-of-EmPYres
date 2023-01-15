@@ -1,5 +1,4 @@
 import os
-
 import pygame
 from pygame.sprite import Group
 from Assets.Buildings.states import BuildingState
@@ -12,7 +11,9 @@ class Building(pygame.sprite.Sprite):
     tile_y = MAP_SETTINGS["Tiles"]["Size"]["y"]
 
     def __init__(self, group, texture, team=1, hp=1000, ct=20, to=2, pos=Vector2(0, 0)):
-        super().__init__(group)
+        super().__init__()
+        group.add(self)
+        self.camera = group
         self.texture = texture      # Image to use for the building
         self.state = BuildingState.PLACING   # Initial building state
         self._workers = Group()     # Sprite.Group to store the worker assigned to the building
@@ -47,14 +48,9 @@ class Building(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image, self._size)
         # self.image.set_alpha(alpha)
         self.rect = self.image.get_rect(center=self.pos)
-        self.mask = pygame.mask.from_surface(self.image, threshold=127)
-        print(self.mask.count())
-        # print("Image size")
-        # print(self.image.get_size())
-        # print("Mask size")
-        # print(self.mask.get_size())
-        # print("Ret size")
-        # print(self.rect.size)
+        self.mask = pygame.mask.from_surface(self.image)
+        # olist = self.mask.outline()
+        # pygame.draw.lines(self.image, (200, 150, 150), 1, olist)
 
     def construct(self):
         if self._remaining_build_time == 0:  # Complete construction
@@ -86,10 +82,10 @@ class Building(pygame.sprite.Sprite):
             self._set_image("foundation-selection")
 
     def is_colliding(self):
-        for sprite in self.groups()[0].resources.sprites():
-            print(self.mask.overlap_area(sprite.mask, (0, 0)))
-            if self.mask.overlap_area(sprite.mask, (0, 0)) > 0:
-                return True
+        collider_list = pygame.sprite.spritecollide(self, self.camera.mutable, False, pygame.sprite.collide_mask)
+        if collider_list:
+            print(collider_list)
+            return True
         return False
 
     def custom_update(self):

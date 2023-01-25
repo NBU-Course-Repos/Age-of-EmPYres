@@ -3,7 +3,7 @@ from Assets.Units.unit import Unit
 from Assets.Units.states import UnitState
 from Assets.Buildings.states import BuildingState
 from Assets.Resources.types import ResourceType
-from Assets.Resources.states import ResourceStatus
+from Assets.Resources.states import ResourceState
 from Assets.UserInterface.text import Text
 
 
@@ -49,7 +49,7 @@ class Villager(Unit):
             self._move()
         else:
             for resource in self.resource_carrying:
-                self.player.resource_group[resource] += self.resource_carrying[resource]
+                self.player.resources[resource] += self.resource_carrying[resource]
                 self.resource_carrying[resource] = 0
             self.set_gather(self.task_object)
 
@@ -92,7 +92,7 @@ class Villager(Unit):
             self.state == UnitState.STATE_IDLE
 
     def _gather(self):
-        if self.task_object.state != ResourceStatus.DESTROYED:
+        if self.task_object.state != ResourceState.DESTROYED:
             self.target_destination = self.task_object.get_position()
             if not self._is_at_target():
                 self._move()

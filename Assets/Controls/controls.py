@@ -16,6 +16,7 @@ class Controls:
     selectedObjects = []
     building: Building
     state = ControlStates.NOTHING
+    button_is_pressed = False
 
     # Used to deselect object of class_type. For ex. we want only one resource selected, only one building, etc.
     @staticmethod
@@ -51,59 +52,64 @@ class Controls:
                 pygame.quit()
                 sys.exit()
 
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:  # Turn on/off game pause
-                camera.ui_group.set_pause()
+            # if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:  # Turn on/off game pause
+            #     camera.ui_group.set_pause()
             # Check if left mouse button is clicked
             if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0]:
+                Controls.button_is_pressed = False
                 if Controls.state == ControlStates.PLACING:
                     # If in Building placement mode
                     if not Controls.building.is_colliding():
-                        Controls.building.construct()  # Here if the building is not built, its state is set to CONSTRUCTING
+                        Controls.building.set_construct()
                         Controls.state = ControlStates.UNIT
                         for unit in Controls.selectedObjects:
                             if type(unit) == Villager:
                                 unit.set_construct(Controls.building)
                     else:
                         print("Can't place. There is a collision")
-                mouse_pos = Vector2(pygame.mouse.get_pos())
-                selected_count = 0
+                else:  # If not placing a building register other mouse clicks
+                    mouse_pos = Vector2(pygame.mouse.get_pos())
+                    selected_count = 0
 
-                # If any of the ui is clicked, don't deselect the selected objects
-                for ui in camera.ui_group.sprites():
-                    if Controls.is_clicked(ui, mouse_pos):
-                        selected_count += 1
+                    # If any of the ui is clicked, don't deselect the selected objects
+                    for ui in camera.ui_group.sprites():
+                        if Controls.is_clicked(ui, mouse_pos):
+                            selected_count += 1
 
-                # If button has been clicked, perform its action
-                for button in camera.ui_group.rendered_buttons:
-                    if Controls.is_clicked(button, mouse_pos):
-                        selected_count += 1
-                        button.action(camera, camera.building_group)
-                        break
+                    # If button has been clicked, perform its action
+                    for button in camera.ui_group.rendered_buttons:
+                        if Controls.is_clicked(button, mouse_pos):
+                            Controls.button_is_pressed = True
+                            selected_count += 1
+                            button.action(camera, camera.building_group)
+                            break
 
-                for resource in camera.resource_group.sprites():
-                    if Controls.is_clicked(resource, mouse_pos):
-                        Controls.__clear_selected()
-                        resource.select()
-                        selected_count += 1
-                        Controls.selectedObjects.append(resource)
-                        break
+                    for resource in camera.resource_group.sprites():
+                        if Controls.button_is_pressed:
+                            break
+                        if Controls.is_clicked(resource, mouse_pos):
+                            Controls.__clear_selected()
+                            resource.select()
+                            selected_count += 1
+                            Controls.selectedObjects.append(resource)
+                            break
 
-                # Selected Units
-                for unit in camera.unit_group.sprites():
-                    if Controls.is_clicked(unit, mouse_pos):
-                        Controls.__clear_selected()
-                        Controls.state = ControlStates.UNIT
-                        unit.select()
-                        Controls.selectedObjects.append(unit)
-                        selected_count += 1
-                        break
+                    # Selected Units
+                    for unit in camera.unit_group.sprites():
+                        if Controls.is_clicked(unit, mouse_pos):
+                            Controls.__clear_selected()
+                            Controls.state = ControlStates.UNIT
+                            unit.select()
+                            Controls.selectedObjects.append(unit)
+                            selected_count += 1
+                            break
 
-                if selected_count == 0 and len(Controls.selectedObjects):
-                    # if there aren't any selected object in the last left mouse click deselect
-                    # the ones that were previously selected
-                    for obj in Controls.selectedObjects:
-                        obj.deselect()
-                    Controls.selectedObjects.clear()
+                    if selected_count == 0 and len(Controls.selectedObjects):
+                        # if there aren't any selected object in the last left mouse click deselect
+                        # the ones that were previously selected
+                        for obj in Controls.selectedObjects:
+                            obj.deselect()
+                        Controls.selectedObjects.clear()
 
             # Check if right mouse button is clicked
             if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[2]:
@@ -113,7 +119,7 @@ class Controls:
                 for building in camera.building_group.sprites():
                     if Controls.is_clicked(building, mouse_pos) and building.state != BuildingState.BUILT:
                         target = building
-                        building.highlight_foundation()
+                        # building.highlight_foundation()
                         break
                     elif Controls.is_clicked(building, mouse_pos) and type(building) == TownCenter:
                         target = building
@@ -121,7 +127,6 @@ class Controls:
 
                 for resource in camera.resource_group.sprites():
                     if Controls.is_clicked(resource, mouse_pos):
-                # Controls.__deselect_same(Resource)
                         target = resource
                         break
 
@@ -144,9 +149,9 @@ class Controls:
 
                 elif Controls.state == ControlStates.PLACING:
                     Controls.building.kill()  # Stop placing the building
+                    Controls.state = ControlStates.UNIT
 
             # House building shortcut
             if event.type == pygame.KEYDOWN and event.key == pygame.K_q:
                 Controls.state = ControlStates.PLACING
-                Controls.building = House(camera)
-                camera.add(Controls.building)
+                Controls.building = House(camera, pos=pygame.mouse.get_pos())

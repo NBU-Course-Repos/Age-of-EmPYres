@@ -2,6 +2,8 @@ import os
 
 import pygame
 from pygame.math import Vector2 as Vector2
+
+from Assets.AOESprite.aoe_sprite import AOESprite
 from Assets.settings import MAP_SETTINGS
 
 
@@ -19,7 +21,11 @@ class Tile(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image, self.TILE_SIZE)
         self.rect = self.image.get_rect(topleft=self.pos)
         self.border: pygame.Rect = None
+        # self.uber_object = None
         group.add(self)
+
+    # def set_uber_object(self, obj):
+    #     self.uber_object = obj
 
     def draw_border(self):
         self.border = pygame.draw.rect(surface=self.image,

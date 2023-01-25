@@ -3,12 +3,14 @@ import pygame
 from pygame.sprite import Sprite
 from pygame.math import Vector2
 from pygame.sprite import Group
+
+from Assets.AOESprite.aoe_sprite import AOESprite
 from Assets.Resources.types import ResourceType
-from Assets.Resources.states import ResourceStatus
+from Assets.Resources.states import ResourceState
 from Assets.UserInterface.text import Text
 
 
-class Resource(Sprite):
+class Resource(AOESprite):
     def __init__(self, pos: Vector2, camera: Group, rtype: ResourceType, image_enum=1, amount=100, tile=None):
         super().__init__()
         self.camera = camera
@@ -17,11 +19,10 @@ class Resource(Sprite):
         self.resource_type = rtype
         self.amount = amount
         self.tile = tile
-        self.state = ResourceStatus.UNTOUCHED
+        self.state = ResourceState.UNTOUCHED
         self._start_ticks = 0
         self._time_passed = 0
         self.is_selected = False
-        camera.add(self)
         try:
             self.image = pygame.image.load(f"{os.getcwd()}/Assets/Textures/Resources/{self.resource_type.value}_{image_enum}.png")
         except FileNotFoundError:
@@ -29,13 +30,12 @@ class Resource(Sprite):
 
         if self.resource_type == ResourceType.WOOD or self.resource_type == ResourceType.STONE:
             self.image = self.image = pygame.transform.scale(self.image, (64, 64))
-        # self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect(midbottom=tile.rect.center)
         self.mask = pygame.mask.from_surface(self.image)
-        # ls = self.mask.outline()
-        # pygame.draw.lines(self.image, (200, 150, 150), 1, ls)
-        # self.add(group.resources)
+        ls = self.mask.outline()
+        pygame.draw.lines(self.image, (200, 150, 150), 1, ls)
         self.ui = []
+        camera.add(self)
 
     def get_workers(self):
         return self._workers.sprites()
@@ -47,7 +47,7 @@ class Resource(Sprite):
         if self._workers.has(worker):
             return
         else:
-            self.state = ResourceStatus.GATHERED
+            self.state = ResourceState.GATHERED
             self._workers.add(worker)
 
     def remove_worker(self, worker):
@@ -56,7 +56,7 @@ class Resource(Sprite):
         if not self._workers:
             self._start_ticks = 0
             self.deselect()
-            self.state = ResourceStatus.UNTOUCHED
+            self.state = ResourceState.UNTOUCHED
 
     def _generate_ui(self):
         bottom_bar = self.camera.ui_group.bottom_bar
@@ -103,8 +103,8 @@ class Resource(Sprite):
     def custom_update(self):
         if self.is_selected:
             self._display_ui()
-        if self.state == ResourceStatus.UNTOUCHED:
+        if self.state == ResourceState.UNTOUCHED:
             return
-        if self.state == ResourceStatus.GATHERED:
+        if self.state == ResourceState.GATHERED:
             self._being_gathered()
 

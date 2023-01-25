@@ -1,12 +1,13 @@
 import os
 import pygame
 from pygame.sprite import Group
-from Assets.Buildings.states import BuildingState
 from pygame.math import Vector2
+from Assets.AOESprite.aoe_sprite import AOESprite
+from Assets.Buildings.states import BuildingState
 from Assets.settings import MAP_SETTINGS
 
 
-class Building(pygame.sprite.Sprite):
+class Building(AOESprite):
     tile_x = MAP_SETTINGS["Tiles"]["Size"]["x"]
     tile_y = MAP_SETTINGS["Tiles"]["Size"]["y"]
 
@@ -14,7 +15,7 @@ class Building(pygame.sprite.Sprite):
         super().__init__()
         self.camera = group
         self.texture = texture      # Image to use for the building
-        self.state = BuildingState.PLACING   # Initial building state
+        self.state = None  # Initial building state
         self._workers = Group()     # Sprite.Group to store the worker assigned to the building
         self._completion_time = ct  # Total time that it should take to construct a building
         # self._required_materials: dict
@@ -25,6 +26,11 @@ class Building(pygame.sprite.Sprite):
         self._start_ticks = 0  # Used as time to denote the construction start
         self._size = Vector2(self._tiles_occupied * self.tile_x, self._tiles_occupied * self.tile_y)  # Image dimensions
         self.team = team
+        self.set_placing()
+        self.image = pygame.image.load(f"{os.getcwd()}/Assets//Textures//Buildings//{self.texture}.png").convert_alpha()
+        self.image = pygame.transform.scale(self.image, self._size)
+        self.rect = self.image.get_rect(center=self.pos)
+        self.mask = pygame.mask.from_surface(self.image)
         group.add(self)
 
     def set_size(self, size: Vector2):
@@ -44,18 +50,26 @@ class Building(pygame.sprite.Sprite):
             self._workers.remove(worker)
 
     def _set_image(self, image, alpha=255):
-        self.image = pygame.image.load(f"{os.getcwd()}/Assets//Textures//Buildings//{image}.png")
+        self.image = pygame.image.load(f"{os.getcwd()}/Assets//Textures//Buildings//{image}.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, self._size)
-        # self.image.set_alpha(alpha)
-        self.rect = self.image.get_rect(center=self.pos)
-        self.mask = pygame.mask.from_surface(self.image)
-        # olist = self.mask.outline()
-        # pygame.draw.lines(self.image, (200, 150, 150), 1, olist)
 
-    def construct(self):
+    def set_construct(self):
+        self.state = BuildingState.PAUSE_CONSTRUCTION
+        self._set_image("foundation")
+        print("Building placed")
+        print(f"Self.rect {self.rect.topleft}")
+        print(f"Self.pos {self.pos}")
+
+    def set_placing(self):
+        self.state = BuildingState.PLACING
+
+    def set_built(self):
+        self.state = BuildingState.BUILT
+        self._set_image(self.texture)
+
+    def _construct(self):
         if self._remaining_build_time == 0:  # Complete construction
-            self._set_image(self.texture)
-            self.state = BuildingState.BUILT
+            self.set_built()
             return
         if self._workers.sprites() and self.state != BuildingState.BUILT:  # Start Constructing the building
             if self._start_ticks == 0:
@@ -69,29 +83,68 @@ class Building(pygame.sprite.Sprite):
             self.state = BuildingState.PAUSE_CONSTRUCTION
             self._start_ticks = 0  # If the construction is paused reset the start time
             self._set_image("foundation", 255)
+            print("Construction paused")
+            print(f"Self.rect {self.rect.topleft}")
+            print(f"Self.pos {self.pos}")
+
+    def awaiting_construction(self):
+        if self._workers.sprites():
+            self.state = BuildingState.CONSTRUCTING
+        else:
+            return
 
     def get_position(self):
         return Vector2(self.pos)
 
-    def placing(self):
-        self.pos = Vector2(pygame.mouse.get_pos())
-        self._set_image(self.texture)
+    def _placing(self):
+        self.rect.midbottom = Vector2(pygame.mouse.get_pos())
 
     def highlight_foundation(self):
         if self.state != BuildingState.BUILT:
             self._set_image("foundation-selection")
 
     def is_colliding(self):
-        collider_list = pygame.sprite.spritecollide(self, self.camera.mutable, False, pygame.sprite.collide_mask)
-        if collider_list:
-            print(collider_list)
-            return True
+        for sprite in self.camera.rendered_sprites:
+            if sprite == self:
+                print("Sprite == self")
+                continue
+            sprite_l = Vector2(sprite.rect.midleft)
+            sprite_r = Vector2(sprite.rect.midright)
+            """ if sprite's bottom or sprite's top is between the
+                building's top or bottom
+            """
+            self_center = Vector2(self.rect.center)
+            self_top = Vector2(self.rect.midtop)
+            self_bottom = Vector2(self.rect.midbottom)
+            if self_top.y <= sprite_l.y <= self_bottom.y and\
+               sprite_l.x < self_center.x < sprite_r.x:
+                try:
+                    print(sprite)
+                    print("Sprite Pos")
+                    print(sprite.pos)
+                    print("Self Pos")
+                    print(self.pos)
+                except:
+                    pass
+                return True
         return False
+
+    def draw(self, surface: pygame.Surface, pos: Vector2):
+        if self.state == BuildingState.PLACING:
+            print("Drawing at topleft")
+            print(self.rect.topleft)
+            super().draw(surface=surface, pos=self.rect.topleft)
+        else:
+            print("Drawing at pos")
+            print(self.pos)
+            super().draw(surface=surface, pos=self.pos)
 
     def custom_update(self):
         if self.state == BuildingState.PLACING:
-            self.placing()
+            self._placing()
         elif self.state == BuildingState.BUILT:
             return
-        elif self.state == BuildingState.CONSTRUCTING or self.state == BuildingState.PAUSE_CONSTRUCTION:
-            self.construct()
+        elif self.state == BuildingState.CONSTRUCTING:
+            self._construct()
+        elif self.state == BuildingState.PAUSE_CONSTRUCTION:
+            self.awaiting_construction()

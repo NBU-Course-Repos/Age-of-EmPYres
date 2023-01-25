@@ -16,20 +16,13 @@ class Map:
         self.tree_count = 0
         self.stone_count = 0
         self.__generate_terrain(camera)
-        # self.__generate_resources(group)
-        # camera.town_center = TownCenter([camera,camera.buildings_group])
-        # starter_building = Building(camera, "starting_building", pos=Vector2(SCREEN_WIDTH/2, SCREEN_HEIGHT/2), ct=0, to=2.5)
-        # camera.town_center.set_size(Vector2(250, 150))
-        # camera.town_center.construct()
-        # camera.town_center.state = BuildingState.BUILT
 
     def __generate_terrain(self, group):
         total_map_size = MAP_SIZE.elementwise()*TILE_SIZE
-        counter: int = 0
         for row in range(-int(total_map_size.y/2), int(total_map_size.y/2), 64):
             for col in range(-int(total_map_size.x/2), int(total_map_size.x/2), 64):
                 tile = Tile((col, row), group, "grass")
-                if randint(0, 9) % 4 == 0 and self.tree_count <= 3000:
+                if randint(0, 9) % 4 == 0 and self.tree_count <= 2000:
                     i = randint(1, 9)
                     self.__generate_resources((col, row), group, ResourceType.WOOD, i, tile)
                 elif randint(0, 13) % 7 == 0 and self.stone_count <= 300:

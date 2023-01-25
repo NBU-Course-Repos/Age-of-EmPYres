@@ -11,6 +11,6 @@ class TownCenter(Building):
         
     def instantly_build(self):
         self.set_size(Vector2(250, 200))
-        self.construct()
+        self._construct()
         self.state = BuildingState.BUILT
         return self

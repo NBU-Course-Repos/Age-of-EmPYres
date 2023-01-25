@@ -30,7 +30,6 @@ class HouseButton(Button):
 
     def action(self, camera, group):
         Controls.building = House(camera)
-        Controls.building.add(group)
         Controls.state = ControlStates.PLACING
 
 
@@ -41,7 +40,6 @@ class MillButton(Button):
 
     def action(self, camera, group):
         Controls.building = Mill(camera)
-        Controls.building.add(group)
         Controls.state = ControlStates.PLACING
 
 

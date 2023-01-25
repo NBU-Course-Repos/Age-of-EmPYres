@@ -11,9 +11,9 @@ class Mill(Building):
 
     def custom_update(self):
         if self.state == BuildingState.PLACING:
-            self.placing()
+            self._placing()
         elif self.state == BuildingState.BUILT:
             self.groups()[0].has_mill = True # Camera group
             return
         elif self.state == BuildingState.CONSTRUCTING or self.state == BuildingState.PAUSE_CONSTRUCTION:
-            self.construct()
+            self._construct()

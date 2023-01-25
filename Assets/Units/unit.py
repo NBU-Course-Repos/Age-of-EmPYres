@@ -2,12 +2,13 @@ import os
 
 import pygame
 from pygame.math import Vector2
+from Assets.AOESprite.aoe_sprite import AOESprite
 from Assets.Units.states import UnitState
 from Assets.UserInterface.text import Text
 from Assets.SaveSystem.savable_object import SavableObject
 
 
-class Unit(pygame.sprite.Sprite):
+class Unit(AOESprite):
 
     def __init__(self, group, player, pos=Vector2(0, 0),  image="", hp=100, size=Vector2(0, 0), speed=10, damage=0, name="", team=1):
         super().__init__()
@@ -55,6 +56,9 @@ class Unit(pygame.sprite.Sprite):
         self.is_selected = True
         self.draw_border()
         self.camera.ui_group.render_villager_buttons()
+
+    def update_target_offset(self, offset):  # Don't touch, this fixed the player offset for out of screen movement
+        self.target_destination = self.target_destination - offset
 
     def deselect(self):
         if not self.is_selected:
